@@ -101,43 +101,43 @@
     {
       "q": "Kỹ năng chia một vấn đề lớn thành các phần nhỏ hơn có thể giải quyết riêng lẻ.",
       "fullTerm": "Decomposition",
-      "target": "PART",
+      "target": "DECOMPOSITION",
       "explain": "DECOMPOSITION: phân rã vấn đề. Từ khóa là PART – mỗi phần nhỏ (part) đều có thể giải quyết độc lập."
     },
     {
       "q": "Nhận ra xu hướng và quy luật lặp lại trong dữ liệu – ___ Recognition.",
       "fullTerm": "Pattern Recognition",
-      "target": "RULE",
+      "target": "PATTERN",
       "explain": "PATTERN Recognition: nhận dạng quy luật (RULE) lặp lại trong dữ liệu để dự đoán và điều chỉnh hành vi."
     },
     {
       "q": "Lọc bỏ chi tiết không cần thiết, chỉ giữ lại thông tin cốt lõi.",
       "fullTerm": "Abstraction",
-      "target": "CORE",
+      "target": "ABSTRACTION",
       "explain": "ABSTRACTION: trừu tượng hóa. Giữ lại phần CORE (cốt lõi), bỏ đi nhiễu."
     },
     {
       "q": "Quan hệ trong đó A trực tiếp gây ra B.",
       "fullTerm": "Causation",
-      "target": "CAUSE",
+      "target": "CAUSATION",
       "explain": "CAUSATION: quan hệ nhân-quả. Từ khóa chính là CAUSE – A là nguyên nhân trực tiếp gây ra B."
     },
     {
       "q": "Hai biến thay đổi cùng chiều nhưng không nhất thiết có quan hệ nhân-quả.",
       "fullTerm": "Correlation",
-      "target": "LINK",
+      "target": "CORRELATION",
       "explain": "CORRELATION: tương quan – hai biến có LINK (liên kết) thống kê nhưng chưa chắc có nhân-quả."
     },
     {
-      "q": "Biến ẩn ảnh hưởng đến cả hai biến đang xét, tạo ra tương quan giả.",
+      "q": "Biến ẩn ảnh hưởng đến cả hai biến đang xét, tạo ra tương quan giả – ___ Variable.",
       "fullTerm": "Confounding Variable",
-      "target": "BIAS",
+      "target": "CONFOUNDING",
       "explain": "CONFOUNDING Variable: biến nhiễu gây ra BIAS (thiên lệch) trong kết quả phân tích."
     },
     {
-      "q": "Đánh giá độ tin cậy và tính liên quan của bằng chứng trước khi dùng.",
+      "q": "Đánh giá độ tin cậy và tính liên quan của bằng chứng trước khi dùng. – Evidence ___.",
       "fullTerm": "Evidence Evaluation",
-      "target": "TEST",
+      "target": "EVALUATION",
       "explain": "Evidence EVALUATION: kiểm định bằng chứng – phải TEST (kiểm tra) trước khi dùng làm cơ sở kết luận."
     },
     {
