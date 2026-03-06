@@ -1,0 +1,278 @@
+{
+  "quiz": [
+    {
+      "q": "Analytical Thinking được định nghĩa là gì?",
+      "ctx": null,
+      "choices": ["Khả năng tạo ra ý tưởng hoàn toàn mới, chưa từng tồn tại","Quá trình phân tích thông tin có hệ thống, chia nhỏ vấn đề và xác định quan hệ nhân-quả để rút ra kết luận logic","Ghi nhớ và tái hiện thông tin một cách chính xác và nhanh chóng","Đưa ra quyết định dựa trên trực giác và kinh nghiệm cá nhân"],
+      "answer": 1,
+      "hint": "Gồm 4 kỹ năng cốt lõi: Decomposition, Pattern Recognition, Abstraction, Evidence Evaluation.",
+      "explain": "Analytical Thinking = phân tích có hệ thống: chia nhỏ (Decomposition), nhận quy luật (Pattern Recognition), trừu tượng hóa (Abstraction), và đánh giá bằng chứng (Evidence Evaluation) để đưa ra kết luận có căn cứ."
+    },
+    {
+      "q": "Decomposition trong Analytical Thinking có nghĩa là gì?",
+      "ctx": null,
+      "choices": ["Tổng hợp nhiều nguồn thông tin thành một kết luận duy nhất","Loại bỏ chi tiết không liên quan để nhìn thấy bức tranh tổng thể","Chia vấn đề lớn, phức tạp thành các phần nhỏ hơn có thể xử lý được","Ghi nhớ thông tin theo từng module riêng biệt"],
+      "answer": 2,
+      "hint": "De- (tách ra) + composition (cấu trúc). Nghĩ đến việc chia nhỏ một bài toán lớn.",
+      "explain": "Decomposition = phân rã vấn đề. Thay vì hoảng loạn với 'Tại sao điểm tôi giảm?', ta chia nhỏ: môn nào? dạng bài nào? thiếu kỹ năng gì? thời gian học có đủ không? Mỗi phần nhỏ đều có thể giải quyết riêng lẻ."
+    },
+    {
+      "q": "Pattern Recognition trong Analytical Thinking giúp ích gì?",
+      "ctx": null,
+      "choices": ["Giúp tạo ra các quy tắc mới chưa từng tồn tại trong dữ liệu","Giúp nhận ra xu hướng và quy luật lặp lại để dự đoán và đưa ra quyết định","Giúp phân loại thông tin theo thứ tự bảng chữ cái","Giúp lọc bỏ dữ liệu trùng lặp để tiết kiệm bộ nhớ"],
+      "answer": 1,
+      "hint": "Pattern = quy luật/khuôn mẫu lặp lại. Kỹ năng này giúp ta 'thấy' điều mà dữ liệu đang nói.",
+      "explain": "Pattern Recognition = nhận dạng quy luật lặp lại. Ví dụ: nhận ra rằng mỗi khi học khuya sau 1 giờ sáng, điểm thi hôm sau thấp hơn → đây là pattern có thể dùng để thay đổi hành vi có chủ đích."
+    },
+    {
+      "q": "Abstraction trong Analytical Thinking có vai trò gì?",
+      "ctx": null,
+      "choices": ["Chuyển đổi dữ liệu số thành ngôn ngữ dễ hiểu","Tạo ra các khái niệm trừu tượng để giải thích mọi hiện tượng","Loại bỏ chi tiết không cần thiết, tập trung vào yếu tố cốt lõi của vấn đề","Tổng hợp ý kiến từ nhiều nguồn thành quan điểm chung nhất"],
+      "answer": 2,
+      "hint": "Abstract = trừu tượng. Kỹ năng này giống như 'lọc nhiễu' – bỏ đi thứ không quan trọng.",
+      "explain": "Abstraction = trừu tượng hóa, lọc nhiễu. Khi phân tích tại sao dự án thất bại, bạn bỏ qua font chữ và màu slide, tập trung vào: ngân sách, phân công nhiệm vụ, timeline, communication. Đó là abstraction đúng nghĩa."
+    },
+    {
+      "q": "Sự khác biệt quan trọng nhất giữa Correlation và Causation là gì?",
+      "ctx": null,
+      "choices": ["Correlation chỉ xảy ra trong dữ liệu lớn; Causation xảy ra ở dữ liệu nhỏ","Correlation = hai biến thay đổi cùng nhau; Causation = A trực tiếp gây ra B","Causation bao hàm Correlation và mạnh hơn về mặt thống kê","Chỉ Causation mới có ý nghĩa thực tiễn trong phân tích"],
+      "answer": 1,
+      "hint": "Kem bán nhiều ↔ số vụ chết đuối tăng – đây là ví dụ kinh điển của loại quan hệ nào?",
+      "explain": "Correlation ≠ Causation – nguyên tắc cốt lõi của phân tích dữ liệu. Ví dụ: kem bán nhiều ↔ số vụ chết đuối tăng (Correlation), nhưng kem không gây chết đuối – cả hai cùng tăng vì mùa hè nóng (confounding variable)."
+    },
+    {
+      "q": "Đâu là ví dụ điển hình của lỗi nhầm Correlation với Causation?",
+      "ctx": "Dữ liệu: học sinh ở trường có thư viện lớn có điểm cao hơn.",
+      "choices": ["Học sinh trường giàu học giỏi hơn vì áp lực cạnh tranh cao hơn","Xây thư viện lớn hơn sẽ trực tiếp nâng điểm học sinh","Cả thư viện tốt lẫn điểm cao đều có thể là kết quả của điều kiện trường tốt (biến thứ 3)","Học sinh giỏi tự chọn trường có thư viện vì họ thích đọc sách"],
+      "answer": 2,
+      "hint": "Hãy hỏi: có biến nào ảnh hưởng đến CẢ HAI (thư viện lớn và điểm cao) không?",
+      "explain": "Trường có ngân sách tốt → vừa có thư viện lớn, vừa có giáo viên tốt, vừa thu hút gia đình quan tâm đến học. Đây là confounding variable. Không thể kết luận thư viện trực tiếp gây ra điểm cao."
+    },
+    {
+      "q": "Evidence Evaluation trong Analytical Thinking đòi hỏi điều gì?",
+      "ctx": null,
+      "choices": ["Tin tưởng vào mọi nguồn có trích dẫn học thuật","Chỉ dùng bằng chứng từ các tổ chức chính phủ","Đánh giá tính tin cậy, tính liên quan và phương pháp của bằng chứng trước khi dùng","Thu thập càng nhiều bằng chứng càng tốt mà không cần lọc"],
+      "answer": 2,
+      "hint": "Không phải bằng chứng nào cũng như nhau. Hỏi: nguồn có uy tín không? phương pháp có hợp lý không?",
+      "explain": "Evidence Evaluation: không phải bằng chứng nào cũng như nhau. Cần xét: nguồn có uy tín không? Phương pháp nghiên cứu có hợp lý không? Có conflict of interest không? Kết quả có được replicated không?"
+    },
+    {
+      "q": "Sau khi nhận ra pattern 'điểm cao → học sáng; điểm thấp → học khuya', bước Analytical Thinking tiếp theo là gì?",
+      "ctx": null,
+      "choices": ["Kết luận ngay: học buổi sáng luôn tốt hơn buổi tối","Bỏ qua vì chỉ có dữ liệu của bản thân, không đủ tin cậy","Xác nhận pattern, rồi kiểm tra biến khác: khối lượng bài, giấc ngủ, mức stress","Hỏi thêm bạn bè xem họ có cùng kết quả không trước khi làm gì"],
+      "answer": 2,
+      "hint": "Nhận ra Pattern mới là bước đầu. Bước tiếp theo là tìm confounding variables.",
+      "explain": "Nhận ra Pattern là bước đầu – nhưng chưa đủ. Cần kiểm tra confounding variables: bài học sáng có nhẹ hơn không? Ngủ đủ giấc không? Stress như thế nào? Đây mới là Analytical Thinking hoàn chỉnh."
+    },
+    {
+      "q": "Analytical Thinking là kỹ năng bẩm sinh hay có thể học được?",
+      "ctx": null,
+      "choices": ["Hoàn toàn bẩm sinh – chỉ một số người có khả năng phân tích tốt","Phần lớn bẩm sinh nhưng có thể cải thiện một chút qua thực hành","Là kỹ năng có thể rèn luyện và phát triển qua thực hành có ý thức","Chỉ phát triển được ở người học ngành STEM"],
+      "answer": 2,
+      "hint": "So sánh với bơi lội, lập trình – những kỹ năng ai cũng có thể học nếu luyện tập.",
+      "explain": "Analytical Thinking là kỹ năng (skill), không phải tài năng bẩm sinh cố định. Giống như bơi lội hay lập trình, nó có thể được học, luyện tập và cải thiện theo thời gian với sự thực hành có ý thức."
+    },
+    {
+      "q": "Confounding Variable là gì?",
+      "ctx": null,
+      "choices": ["Biến số chính gây ra kết quả trong một thí nghiệm","Một biến ẩn ảnh hưởng đến cả hai biến đang xét, tạo ra ấn tượng sai về nhân-quả","Biến số dùng để kiểm soát các sai số trong dữ liệu","Kết quả cuối cùng của một chuỗi phân tích nhân-quả"],
+      "answer": 1,
+      "hint": "Confound = gây nhầm lẫn. Biến này 'ẩn mình' và ảnh hưởng đến cả hai phía của mối quan hệ.",
+      "explain": "Confounding Variable = biến nhiễu. Ví dụ: nghiên cứu thấy 'uống cà phê → giảm nguy cơ tim mạch'. Nhưng confounding variable là: người uống cà phê có xu hướng năng động hơn và ăn uống lành mạnh hơn – chính những thứ này mới bảo vệ tim mạch."
+    },
+    {
+      "q": "Root Cause Analysis khác gì so với chỉ xử lý triệu chứng?",
+      "ctx": "Máy tính liên tục bị treo. Bạn khởi động lại máy mỗi lần xảy ra.",
+      "choices": ["Khởi động lại máy là Root Cause Analysis vì nó giải quyết được vấn đề","Root Cause Analysis tìm nguyên nhân gốc rễ: tại sao máy treo? RAM? Phần mềm? Nhiệt độ?","Root Cause Analysis chỉ áp dụng cho vấn đề trong môi trường sản xuất công nghiệp","Không có sự khác biệt – cả hai đều giải quyết vấn đề hiệu quả như nhau"],
+      "answer": 1,
+      "hint": "Root = rễ cây. Giải quyết vấn đề ở rễ khác với chỉ cắt phần ngọn (triệu chứng).",
+      "explain": "Khởi động lại = xử lý triệu chứng (symptom). Root Cause Analysis hỏi 'tại sao?' liên tục (5 Whys): Tại sao treo? → RAM đầy. Tại sao RAM đầy? → App rò rỉ bộ nhớ. Tại sao rò rỉ? → Bug trong phiên bản cũ. Giải pháp thực sự: cập nhật phần mềm."
+    },
+    {
+      "q": "Data-Driven Decision Making trong Analytical Thinking có nghĩa là gì?",
+      "ctx": null,
+      "choices": ["Chỉ tin vào số liệu và hoàn toàn bỏ qua kinh nghiệm thực tế","Đưa ra quyết định dựa trên phân tích dữ liệu thay vì chỉ dựa trên trực giác hay thói quen","Dùng phần mềm AI để tự động đưa ra mọi quyết định","Thu thập càng nhiều dữ liệu càng tốt trước khi quyết định bất cứ điều gì"],
+      "answer": 1,
+      "hint": "Data bổ trợ trực giác, không thay thế hoàn toàn. Hỏi: quyết định này có căn cứ thực tế không?",
+      "explain": "Data-Driven Decision Making = ra quyết định có căn cứ. Không loại bỏ hoàn toàn trực giác, nhưng bổ sung bằng dữ liệu thực tế. Ví dụ: thay vì 'tôi thấy sinh viên thích học online', thu thập dữ liệu tỷ lệ hoàn thành, điểm số, feedback trước khi quyết định."
+    }
+  ],
+  "wordle": [
+    {
+      "q": "Kỹ năng chia một vấn đề lớn thành các phần nhỏ hơn có thể giải quyết riêng lẻ.",
+      "fullTerm": "Decomposition",
+      "target": "PART",
+      "explain": "DECOMPOSITION: phân rã vấn đề. Từ khóa là PART – mỗi phần nhỏ (part) đều có thể giải quyết độc lập."
+    },
+    {
+      "q": "Nhận ra xu hướng và quy luật lặp lại trong dữ liệu – ___ Recognition.",
+      "fullTerm": "Pattern Recognition",
+      "target": "RULE",
+      "explain": "PATTERN Recognition: nhận dạng quy luật (RULE) lặp lại trong dữ liệu để dự đoán và điều chỉnh hành vi."
+    },
+    {
+      "q": "Lọc bỏ chi tiết không cần thiết, chỉ giữ lại thông tin cốt lõi.",
+      "fullTerm": "Abstraction",
+      "target": "CORE",
+      "explain": "ABSTRACTION: trừu tượng hóa. Giữ lại phần CORE (cốt lõi), bỏ đi nhiễu."
+    },
+    {
+      "q": "Quan hệ trong đó A trực tiếp gây ra B.",
+      "fullTerm": "Causation",
+      "target": "CAUSE",
+      "explain": "CAUSATION: quan hệ nhân-quả. Từ khóa chính là CAUSE – A là nguyên nhân trực tiếp gây ra B."
+    },
+    {
+      "q": "Hai biến thay đổi cùng chiều nhưng không nhất thiết có quan hệ nhân-quả.",
+      "fullTerm": "Correlation",
+      "target": "LINK",
+      "explain": "CORRELATION: tương quan – hai biến có LINK (liên kết) thống kê nhưng chưa chắc có nhân-quả."
+    },
+    {
+      "q": "Biến ẩn ảnh hưởng đến cả hai biến đang xét, tạo ra tương quan giả.",
+      "fullTerm": "Confounding Variable",
+      "target": "BIAS",
+      "explain": "CONFOUNDING Variable: biến nhiễu gây ra BIAS (thiên lệch) trong kết quả phân tích."
+    },
+    {
+      "q": "Đánh giá độ tin cậy và tính liên quan của bằng chứng trước khi dùng.",
+      "fullTerm": "Evidence Evaluation",
+      "target": "TEST",
+      "explain": "Evidence EVALUATION: kiểm định bằng chứng – phải TEST (kiểm tra) trước khi dùng làm cơ sở kết luận."
+    },
+    {
+      "q": "Tìm nguyên nhân sâu xa nhất của vấn đề – ___ Cause Analysis.",
+      "fullTerm": "Root Cause Analysis",
+      "target": "ROOT",
+      "explain": "ROOT Cause Analysis: giải quyết vấn đề ở ROOT (rễ), không chỉ cắt phần ngọn (triệu chứng)."
+    }
+  ],
+  "match": [
+    { "term": "Decomposition",        "def": "Chia vấn đề lớn thành các phần nhỏ hơn có thể xử lý được" },
+    { "term": "Pattern Recognition",  "def": "Nhận ra xu hướng và quy luật lặp lại trong dữ liệu" },
+    { "term": "Abstraction",          "def": "Loại bỏ chi tiết không cần thiết, tập trung vào bản chất cốt lõi" },
+    { "term": "Causation",            "def": "Quan hệ nhân-quả trực tiếp: A trực tiếp gây ra B" },
+    { "term": "Correlation",          "def": "Hai biến thay đổi cùng nhau nhưng chưa chắc có nhân-quả" },
+    { "term": "Confounding Variable", "def": "Biến ẩn ảnh hưởng cả hai biến đang xét, tạo ra tương quan giả" },
+    { "term": "Evidence Evaluation",  "def": "Đánh giá độ tin cậy và tính liên quan của bằng chứng" },
+    { "term": "Root Cause Analysis",  "def": "Tìm nguyên nhân sâu xa nhất, không chỉ xử lý triệu chứng bề mặt" },
+    { "term": "Analytical Thinking",  "def": "Phân tích thông tin có hệ thống để rút ra kết luận logic" },
+    { "term": "Systems Thinking",     "def": "Nhìn cách các bộ phận của một hệ thống kết nối và ảnh hưởng lẫn nhau" }
+  ],
+  "glossaryCats": [
+    { "id": "core",    "label": "Nền tảng AT",         "color": "#e85d04" },
+    { "id": "skill",   "label": "Kỹ năng cốt lõi",     "color": "#0077b6" },
+    { "id": "logic",   "label": "Logic & Suy luận",     "color": "#2d6a4f" },
+    { "id": "process", "label": "Quy trình & Ứng dụng", "color": "#7b2d8b" }
+  ],
+  "glossary": [
+    {
+      "cat": "core",
+      "en": "Analytical Thinking",
+      "vi": "Tư duy phân tích",
+      "defEn": "The process of systematically breaking down complex information into smaller parts, identifying relationships, patterns, and causes in order to reach well-reasoned conclusions.",
+      "defVi": "Quá trình phân tích thông tin phức tạp một cách có hệ thống: chia nhỏ vấn đề, tìm mối quan hệ, quy luật và nguyên nhân để đưa ra kết luận có căn cứ.",
+      "example": "Thay vì hỏi 'Tại sao tôi học không tốt?', tư duy phân tích giúp bạn chia câu hỏi thành: môn nào? dạng bài nào? thời điểm nào? → từ đó tìm nguyên nhân thực sự và giải pháp cụ thể.",
+      "tags": ["Thinking Skill", "Session III"]
+    },
+    {
+      "cat": "skill",
+      "en": "Decomposition",
+      "vi": "Phân rã vấn đề",
+      "defEn": "Breaking a complex problem or system into smaller, more manageable parts that can be understood, solved, or analyzed independently.",
+      "defVi": "Chia một vấn đề lớn, phức tạp thành các phần nhỏ hơn, đơn giản hơn để có thể hiểu, phân tích và giải quyết từng phần một cách độc lập.",
+      "example": "'Tôi cần cải thiện GPA' → Chia thành: (1) môn nào đang thấp nhất? (2) lý do cụ thể là gì? (3) nguồn lực nào để cải thiện? Mỗi câu hỏi nhỏ dễ trả lời hơn câu hỏi lớn ban đầu.",
+      "tags": ["Component Part", "Core Skill"]
+    },
+    {
+      "cat": "skill",
+      "en": "Pattern Recognition",
+      "vi": "Nhận dạng quy luật",
+      "defEn": "The ability to identify recurring trends, regularities, or similarities in data, events, or behaviors that can be used to make predictions or draw insights.",
+      "defVi": "Khả năng nhận ra xu hướng, quy luật lặp lại hoặc sự tương đồng trong dữ liệu, sự kiện hay hành vi – dùng để dự đoán hoặc rút ra bài học.",
+      "example": "Sau 3 kỳ học, bạn nhận ra điểm môn toán luôn thấp vào học kỳ có nhiều môn thi cùng lúc → đây là pattern giúp bạn lên kế hoạch phân bổ thời gian hợp lý hơn.",
+      "tags": ["Component Part", "Data Analysis"]
+    },
+    {
+      "cat": "skill",
+      "en": "Abstraction",
+      "vi": "Trừu tượng hóa",
+      "defEn": "The process of filtering out unnecessary details and focusing only on the essential information relevant to the problem at hand.",
+      "defVi": "Quá trình lọc bỏ các chi tiết không cần thiết, chỉ giữ lại thông tin cốt lõi có liên quan đến vấn đề đang cần giải quyết.",
+      "example": "Khi phân tích tại sao chiến dịch marketing thất bại, bạn bỏ qua màu sắc poster và tập trung vào: đối tượng mục tiêu có đúng không? thông điệp có rõ không? kênh phân phối có phù hợp không?",
+      "tags": ["Component Part", "Core Skill"]
+    },
+    {
+      "cat": "skill",
+      "en": "Systems Thinking",
+      "vi": "Tư duy hệ thống",
+      "defEn": "An approach to analysis that focuses on how a system's parts interrelate and work together over time, rather than looking at each part in isolation.",
+      "defVi": "Cách tiếp cận phân tích tập trung vào cách các bộ phận của một hệ thống kết nối và ảnh hưởng lẫn nhau theo thời gian, thay vì nhìn từng bộ phận riêng lẻ.",
+      "example": "Thay vì chỉ tăng ngân sách marketing để bán nhiều hơn, Systems Thinking hỏi: tăng doanh số ảnh hưởng gì đến sản xuất? chất lượng? dịch vụ khách hàng? Toàn bộ chuỗi có theo kịp không?",
+      "tags": ["Advanced Skill", "Strategic"]
+    },
+    {
+      "cat": "logic",
+      "en": "Causation",
+      "vi": "Quan hệ nhân-quả",
+      "defEn": "A direct relationship where one event or variable produces another. A causes B means A is the actual reason B happens — not just associated with it.",
+      "defVi": "Mối quan hệ trực tiếp trong đó một sự kiện hoặc biến số gây ra sự kiện khác. A gây ra B có nghĩa là A là nguyên nhân THỰC SỰ của B — không chỉ liên quan đến B.",
+      "example": "'Hút thuốc gây ung thư phổi' là quan hệ nhân-quả được xác lập qua nhiều nghiên cứu kiểm soát chặt chẽ, có cơ chế sinh học giải thích, và đã loại trừ confounding variables.",
+      "tags": ["Logic", "Key Concept"]
+    },
+    {
+      "cat": "logic",
+      "en": "Correlation",
+      "vi": "Tương quan",
+      "defEn": "A statistical relationship where two variables tend to change together — but this does NOT mean one causes the other. Correlation ≠ Causation.",
+      "defVi": "Mối quan hệ thống kê trong đó hai biến có xu hướng thay đổi cùng nhau — nhưng điều này KHÔNG có nghĩa là cái này gây ra cái kia. Tương quan ≠ Nhân-quả.",
+      "example": "Số kem bán ra và số vụ chết đuối cùng tăng vào mùa hè (Correlation). Nhưng kem không gây chết đuối — cả hai cùng tăng vì thời tiết nóng (Confounding variable: mùa hè).",
+      "tags": ["Logic", "Key Concept"]
+    },
+    {
+      "cat": "logic",
+      "en": "Confounding Variable",
+      "vi": "Biến nhiễu / Biến thứ 3",
+      "defEn": "A hidden variable that influences both the variables being studied, creating a false impression of a direct relationship between them.",
+      "defVi": "Một biến ẩn có ảnh hưởng đến cả hai biến đang được xem xét, tạo ra ấn tượng sai rằng hai biến đó có quan hệ trực tiếp với nhau.",
+      "example": "Trường có thư viện lớn → học sinh điểm cao. Confounding variable: điều kiện kinh tế của trường — vì nó ảnh hưởng đến CẢ quy mô thư viện LẪN chất lượng giảng dạy và điểm số.",
+      "tags": ["Logic", "Statistics"]
+    },
+    {
+      "cat": "logic",
+      "en": "Evidence Evaluation",
+      "vi": "Đánh giá bằng chứng",
+      "defEn": "The critical assessment of information quality — examining credibility, relevance, methodology, and potential bias before using it as the basis for a conclusion.",
+      "defVi": "Đánh giá có phê phán về chất lượng thông tin — xem xét độ tin cậy, tính liên quan, phương pháp nghiên cứu và khả năng thiên kiến trước khi dùng làm cơ sở kết luận.",
+      "example": "Trước khi tin 'thực phẩm X chữa bệnh Y': Ai nghiên cứu? Mẫu bao nhiêu người? Có peer-reviewed không? Ai tài trợ? Kết quả có được replicate bởi nhóm độc lập không?",
+      "tags": ["Logic", "Core Skill"]
+    },
+    {
+      "cat": "process",
+      "en": "Problem-Solving",
+      "vi": "Giải quyết vấn đề",
+      "defEn": "A structured process: identify the problem → analyze causes → generate solutions → evaluate options → implement and review. The natural outcome of Analytical Thinking.",
+      "defVi": "Quá trình có cấu trúc: xác định vấn đề → phân tích nguyên nhân → tạo giải pháp → đánh giá lựa chọn → thực hiện và đánh giá lại. Đây là kết quả tự nhiên của Analytical Thinking.",
+      "example": "'Nhóm không hoàn thành đúng hạn' → Decompose: ai trễ? tại sao? → Pattern: deadline thứ 6 luôn trễ → Root cause: không có check-in giữa tuần → Giải pháp: họp nhanh thứ 3 hàng tuần.",
+      "tags": ["Process", "Outcome"]
+    },
+    {
+      "cat": "process",
+      "en": "Root Cause Analysis",
+      "vi": "Phân tích nguyên nhân gốc rễ",
+      "defEn": "A method of identifying the fundamental underlying cause of a problem rather than just addressing its surface symptoms. Often uses the '5 Whys' technique.",
+      "defVi": "Phương pháp tìm ra nguyên nhân cơ bản, sâu xa nhất gây ra vấn đề, thay vì chỉ xử lý các triệu chứng bề mặt. Thường dùng kỹ thuật '5 Whys'.",
+      "example": "Máy in hỏng → Tại sao? Giấy kẹt → Tại sao? Bánh kéo bị mòn → Tại sao? Chưa bảo trì định kỳ → Tại sao? Không có lịch bảo trì. → ROOT CAUSE: thiếu quy trình bảo trì.",
+      "tags": ["Process", "Method"]
+    },
+    {
+      "cat": "process",
+      "en": "Data-Driven Decision Making",
+      "vi": "Ra quyết định dựa trên dữ liệu",
+      "defEn": "Making choices based on data analysis and evidence rather than intuition, assumptions, or habit alone. Data supplements — not replaces — judgment.",
+      "defVi": "Đưa ra quyết định dựa trên phân tích dữ liệu và bằng chứng thay vì chỉ dựa vào trực giác, giả định hay thói quen. Dữ liệu bổ trợ — không thay thế — phán đoán.",
+      "example": "Thay vì quyết định 'tôi thấy sinh viên thích học online', một giảng viên thu thập: tỷ lệ hoàn thành bài tập, điểm kiểm tra, feedback khảo sát → rồi mới quyết định format lớp học.",
+      "tags": ["Process", "Applied AT"]
+    }
+  ]
+}

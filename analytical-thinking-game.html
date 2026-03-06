@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytical Thinking Game – Session III</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f0e17;--paper:#fffcf0;--accent:#e85d04;--blue:#0077b6;--soft:#e8e0d0;--green:#2d6a4f;--red:#c1121f;--yellow:#f4a261;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* HOME */
+#home{background:var(--ink);color:var(--paper);align-items:center;justify-content:center;padding:2.5rem 1.5rem;text-align:center;position:relative;overflow:hidden;}
+#home::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(55deg,transparent,transparent 50px,rgba(255,255,255,.02) 50px,rgba(255,255,255,.02) 51px);pointer-events:none;}
+.home-inner{position:relative;z-index:1;max-width:760px;width:100%;}
+.home-tag{font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;}
+.home-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,6vw,3.8rem);font-weight:800;line-height:1.05;margin-bottom:.9rem;}
+.home-title em{color:var(--accent);font-style:normal;}
+.home-desc{max-width:480px;margin:0 auto 2rem;font-size:.9rem;opacity:.6;line-height:1.75;}
+.home-actions{display:flex;gap:.75rem;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:2rem;}
+.home-footer{font-size:.72rem;opacity:.28;margin-top:1.5rem;font-family:'Syne',sans-serif;letter-spacing:.05em;}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:.7rem;margin-bottom:1.4rem;}
+.mode-card{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:1.05rem;cursor:pointer;transition:all .22s;text-align:left;}
+.mode-card:hover,.mode-card.selected{background:rgba(232,93,4,.15);border-color:var(--accent);transform:translateY(-3px);}
+.mode-icon{font-size:1.45rem;margin-bottom:.38rem;}
+.mode-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.16rem;}
+.mode-badge{font-size:.68rem;opacity:.42;margin-bottom:.22rem;}
+.mode-desc{font-size:.74rem;opacity:.52;line-height:1.5;}
+.mode-best{font-size:.68rem;color:var(--yellow);margin-top:.3rem;min-height:.9em;}
+.count-row{display:flex;align-items:center;gap:.6rem;justify-content:center;margin-bottom:1.3rem;flex-wrap:wrap;}
+.count-label{font-size:.76rem;opacity:.5;font-family:'Syne',sans-serif;letter-spacing:.07em;}
+.count-input{width:62px;padding:.38rem .5rem;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:8px;color:var(--paper);font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;text-align:center;outline:none;}
+.count-input:focus{border-color:rgba(255,255,255,.5);}
+.count-note{font-size:.68rem;opacity:.32;}
+/* BUTTONS */
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;padding:.68rem 1.55rem;border-radius:8px;border:none;cursor:pointer;transition:all .18s;letter-spacing:.02em;display:inline-flex;align-items:center;gap:.4rem;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover:not(:disabled){background:#c44d00;transform:translateY(-2px);box-shadow:0 6px 18px rgba(232,93,4,.35);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+.btn-ghost{background:transparent;color:var(--paper);border:1.5px solid rgba(255,255,255,.25);}
+.btn-ghost:hover{border-color:rgba(255,255,255,.6);}
+.btn-dark{background:var(--ink);color:var(--paper);}
+.btn-dark:hover{background:#252535;}
+.btn-exit{background:transparent;color:rgba(255,255,255,.4);border:1.5px solid rgba(255,255,255,.12);font-size:.74rem;padding:.34rem .78rem;border-radius:6px;}
+.btn-exit:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.38);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-danger:hover{background:#9d0e17;}
+.btn-cancel{background:var(--soft);color:var(--ink);}
+.btn-cancel:hover{background:#d8d0c0;}
+.btn-hint{background:transparent;color:var(--yellow);border:1.5px solid var(--yellow);font-size:.74rem;padding:.33rem .78rem;border-radius:6px;}
+.btn-hint:hover:not(:disabled){background:rgba(244,162,97,.12);}
+.btn-hint:disabled{opacity:.3;cursor:not-allowed;}
+/* GAME */
+#game{background:var(--paper);}
+.game-header{background:var(--ink);color:var(--paper);padding:.78rem 1.35rem;display:flex;align-items:center;justify-content:space-between;gap:.55rem;flex-wrap:wrap;flex-shrink:0;}
+.gh-left{display:flex;flex-direction:column;gap:.1rem;}
+.game-mode-label{font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;opacity:.38;}
+.game-topic{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;}
+.gh-mid{display:flex;align-items:center;gap:.5rem;flex:1;justify-content:center;}
+.progress-bar-bg{width:100px;height:4px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;}
+.progress-bar{height:100%;background:var(--accent);border-radius:99px;transition:width .4s;}
+.q-counter{font-size:.73rem;opacity:.42;white-space:nowrap;}
+.gh-right{display:flex;align-items:center;gap:.6rem;}
+.score-live{font-family:'Syne',sans-serif;font-size:.82rem;white-space:nowrap;}
+.score-live span{color:var(--accent);font-size:.96rem;}
+.timer-disp{font-family:'Syne',sans-serif;font-size:.78rem;opacity:.65;white-space:nowrap;}
+.timer-disp.countdown{color:var(--yellow);}
+.timer-disp.urgent{color:var(--red);animation:pulse .7s infinite;}
+.game-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:1.6rem 1.35rem;max-width:700px;margin:0 auto;width:100%;}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--paper);border-radius:14px;padding:1.7rem;max-width:360px;width:100%;text-align:center;animation:popIn .2s ease;}
+.modal-icon{font-size:1.9rem;margin-bottom:.55rem;}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.08rem;margin-bottom:.38rem;}
+.modal-desc{font-size:.83rem;opacity:.62;line-height:1.6;margin-bottom:1.25rem;}
+.modal-btns{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;}
+/* RULES */
+.rules-bar{background:rgba(0,119,182,.07);border-bottom:1px solid rgba(0,119,182,.14);padding:.55rem 1.35rem;font-size:.77rem;color:var(--blue);line-height:1.55;flex-shrink:0;}
+/* Q */
+.q-label{font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;opacity:.32;margin-bottom:.28rem;align-self:flex-start;}
+.q-text{font-family:'Syne',sans-serif;font-size:clamp(.9rem,2.7vw,1.15rem);font-weight:700;line-height:1.45;margin-bottom:.42rem;align-self:flex-start;}
+.q-context{font-size:.8rem;color:var(--blue);font-style:italic;margin-bottom:1.05rem;align-self:flex-start;line-height:1.55;border-left:3px solid var(--blue);padding-left:.62rem;}
+.choices{display:grid;gap:.52rem;width:100%;margin-bottom:.35rem;}
+.choice-btn{background:#fff;border:2px solid var(--soft);border-radius:10px;padding:.7rem .9rem;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.86rem;line-height:1.5;transition:all .18s;display:flex;align-items:flex-start;gap:.52rem;}
+.choice-btn:hover:not(:disabled){border-color:var(--ink);transform:translateX(3px);}
+.choice-letter{font-family:'Syne',sans-serif;font-weight:700;width:21px;height:21px;border-radius:5px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:.66rem;flex-shrink:0;transition:all .18s;margin-top:2px;}
+.choice-btn.correct{background:#d8f3dc;border-color:var(--green);}
+.choice-btn.correct .choice-letter{background:var(--green);color:#fff;}
+.choice-btn.wrong{background:#ffe5d9;border-color:var(--red);animation:shake .25s;}
+.choice-btn.wrong .choice-letter{background:var(--red);color:#fff;}
+.hint-box{background:rgba(244,162,97,.1);border:1.5px solid rgba(244,162,97,.42);border-radius:10px;padding:.75rem .95rem;width:100%;margin-bottom:.75rem;animation:slideUp .2s ease;}
+.hint-label{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);opacity:.85;display:block;margin-bottom:.1rem;}
+.hint-text{font-size:.84rem;line-height:1.55;}
+/* WORDLE */
+.wordle-grid{display:flex;flex-direction:column;gap:.42rem;margin-bottom:.6rem;}
+.wordle-row{display:flex;gap:.42rem;}
+.wordle-cell{width:50px;height:50px;border:2px solid var(--soft);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;text-transform:uppercase;background:#fff;transition:all .2s;}
+.wordle-cell.filled{border-color:#aaa;}
+.wordle-cell.correct{background:var(--green);border-color:var(--green);color:#fff;}
+.wordle-cell.present{background:var(--yellow);border-color:var(--yellow);color:#fff;}
+.wordle-cell.absent{background:#888;border-color:#888;color:#fff;}
+.wordle-cell.active-b{border-color:var(--ink);}
+.wordle-kb{display:flex;flex-direction:column;gap:.3rem;align-items:center;margin-top:.5rem;}
+.wordle-kb-row{display:flex;gap:.28rem;}
+.kb-key{font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;padding:.42rem .5rem;border-radius:6px;border:none;background:var(--soft);cursor:pointer;transition:all .15s;min-width:30px;text-align:center;}
+.kb-key:hover{background:#d0c8b8;}
+.kb-key.correct{background:var(--green);color:#fff;}
+.kb-key.present{background:var(--yellow);color:#fff;}
+.kb-key.absent{background:#aaa;color:#fff;}
+.kb-key.wide{min-width:48px;font-size:.62rem;}
+.wordle-inp-row{display:flex;gap:.55rem;align-items:center;width:100%;max-width:300px;margin:.4rem 0;}
+.wordle-input{flex:1;padding:.65rem .85rem;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;border:2px solid var(--soft);border-radius:10px;outline:none;background:#fff;transition:border .18s;text-align:center;}
+.wordle-input:focus{border-color:var(--ink);}
+.wordle-input.shake{animation:shake .25s;}
+.wordle-meta{font-size:.74rem;opacity:.42;align-self:flex-start;margin:.2rem 0;}
+/* MATCH */
+.match-intro{font-size:.8rem;opacity:.52;margin-bottom:.8rem;align-self:flex-start;line-height:1.55;}
+.match-table{width:100%;border-collapse:separate;border-spacing:0 .45rem;}
+.match-table td{padding:.45rem .5rem;vertical-align:middle;}
+.mtd-term{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;background:var(--ink);color:var(--paper);border-radius:8px;padding:.58rem .85rem;white-space:nowrap;}
+.mtd-lbl{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;opacity:.35;text-align:center;padding:0 .25rem;white-space:nowrap;}
+.mtd-sel{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;width:50px;padding:.4rem;border:2px solid var(--soft);border-radius:8px;text-align:center;outline:none;background:#fff;cursor:pointer;transition:border .18s;}
+.mtd-sel:focus{border-color:var(--ink);}
+.mtd-sel.c{border-color:var(--green);background:#d8f3dc;}
+.mtd-sel.w{border-color:var(--red);background:#ffe5d9;}
+.mtd-def{font-size:.8rem;line-height:1.5;color:#555;}
+.mtd-num{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);margin-right:.3rem;}
+.match-bottom{display:flex;align-items:center;gap:.7rem;margin-top:.7rem;align-self:flex-start;flex-wrap:wrap;}
+.match-tries{font-size:.74rem;opacity:.42;}
+/* FEEDBACK */
+.feedback-box{margin-top:.9rem;padding:.75rem .95rem;border-radius:10px;width:100%;font-size:.83rem;line-height:1.6;animation:slideUp .25s ease;}
+.feedback-box.correct-fb{background:#d8f3dc;border-left:4px solid var(--green);}
+.feedback-box.wrong-fb{background:#ffe5d9;border-left:4px solid var(--red);}
+.feedback-title{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.18rem;font-size:.84rem;}
+.next-wrap{margin-top:.9rem;width:100%;display:flex;justify-content:flex-end;}
+.penalty-info{font-size:.73rem;opacity:.42;margin:.25rem 0;align-self:flex-start;min-height:1em;}
+/* RESULT */
+#result{background:var(--ink);color:var(--paper);align-items:center;justify-content:center;padding:2.5rem 1.5rem;}
+.result-body{max-width:520px;width:100%;text-align:center;}
+.result-tag{font-family:'Syne',sans-serif;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.65rem;}
+.result-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.4rem,5vw,2.3rem);line-height:1.1;margin-bottom:.45rem;}
+.score-ring{width:115px;height:115px;margin:1.1rem auto;position:relative;}
+.score-ring svg{transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:8;}
+.score-ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.score-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;line-height:1;}
+.score-max{font-size:.68rem;opacity:.42;margin-top:.08rem;}
+.result-grade{font-family:'Syne',sans-serif;font-size:.95rem;opacity:.6;margin-bottom:.25rem;}
+.result-time{font-size:.78rem;opacity:.38;margin-bottom:1.1rem;}
+.result-breakdown{background:rgba(255,255,255,.06);border-radius:10px;padding:.9rem;margin-bottom:1.2rem;text-align:left;}
+.rb-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.24rem 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.rb-row:last-child{border:none;}
+.rb-label{opacity:.52;}
+.rb-val{font-family:'Syne',sans-serif;font-weight:700;color:var(--yellow);}
+.new-best-banner{background:rgba(232,93,4,.18);border:1px solid var(--accent);border-radius:8px;padding:.55rem .9rem;font-size:.8rem;color:var(--yellow);margin-bottom:.9rem;animation:popIn .35s ease;}
+.result-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
+/* ACHIEVEMENT */
+#achievement{background:var(--ink);color:var(--paper);}
+.ach-header{background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);padding:.95rem 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ach-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;}
+.ach-body{flex:1;overflow-y:auto;padding:1.3rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:.9rem;max-width:800px;margin:0 auto;width:100%;}
+.ach-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;}
+.ach-cat{font-family:'Syne',sans-serif;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;opacity:.38;margin-bottom:.4rem;}
+.ach-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.ach-name{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;margin-bottom:.7rem;}
+.ach-stat{display:flex;justify-content:space-between;font-size:.78rem;padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.ach-stat:last-child{border:none;}
+.ach-stat-lbl{opacity:.48;}
+.ach-stat-val{font-family:'Syne',sans-serif;font-weight:700;color:var(--yellow);}
+.ach-stat-val.empty{color:rgba(255,255,255,.22);font-weight:400;}
+/* GLOSSARY */
+#glossary{background:var(--paper);}
+.glos-header{background:var(--ink);color:var(--paper);padding:.82rem 1.35rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-shrink:0;flex-wrap:wrap;}
+.glos-hl{display:flex;flex-direction:column;gap:.1rem;}
+.glos-sup{font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.17em;text-transform:uppercase;opacity:.38;}
+.glos-htitle{font-family:'Syne',sans-serif;font-weight:800;font-size:.92rem;}
+.glos-sw{flex:1;max-width:290px;position:relative;}
+.glos-search{width:100%;padding:.46rem .82rem .46rem 2.05rem;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);border-radius:8px;color:var(--paper);font-family:'DM Sans',sans-serif;font-size:.83rem;outline:none;transition:border .18s;}
+.glos-search::placeholder{color:rgba(255,255,255,.28);}
+.glos-search:focus{border-color:rgba(255,255,255,.48);}
+.glos-si{position:absolute;left:.62rem;top:50%;transform:translateY(-50%);opacity:.32;font-size:.82rem;pointer-events:none;}
+.glos-frow{display:flex;gap:.42rem;padding:.7rem 1.35rem;overflow-x:auto;background:rgba(15,14,23,.03);border-bottom:1px solid var(--soft);flex-shrink:0;scrollbar-width:none;}
+.glos-frow::-webkit-scrollbar{display:none;}
+.fchip{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.05em;padding:.3rem .74rem;border-radius:99px;border:1.5px solid var(--soft);background:#fff;cursor:pointer;white-space:nowrap;transition:all .18s;color:var(--ink);}
+.fchip:hover{border-color:var(--ink);}
+.fchip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.glos-count{font-size:.73rem;opacity:.38;padding:.38rem 1.35rem;flex-shrink:0;}
+.glos-body{flex:1;overflow-y:auto;padding:1.1rem 1.35rem;display:flex;flex-direction:column;gap:.8rem;max-width:780px;margin:0 auto;width:100%;}
+.glos-slabel{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;opacity:.32;margin-top:.35rem;}
+.glos-card{background:#fff;border:1.5px solid var(--soft);border-radius:12px;overflow:hidden;transition:box-shadow .18s;cursor:pointer;}
+.glos-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.07);}
+.glos-ch{padding:.85rem .95rem;display:flex;align-items:center;gap:.7rem;}
+.glos-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.glos-terms{flex:1;}
+.glos-en{font-family:'Syne',sans-serif;font-weight:800;font-size:.92rem;line-height:1.2;}
+.glos-vi{font-size:.74rem;opacity:.42;margin-top:.06rem;}
+.glos-chev{font-size:.68rem;opacity:.32;transition:transform .2s;flex-shrink:0;}
+.glos-card.open .glos-chev{transform:rotate(180deg);}
+.glos-cb{display:none;padding:0 .95rem .85rem;border-top:1px solid var(--soft);animation:slideUp .2s ease;}
+.glos-card.open .glos-cb{display:block;}
+.glos-den{font-size:.86rem;line-height:1.65;margin-top:.72rem;padding-left:.75rem;border-left:3px solid var(--accent);}
+.glos-dvi{font-size:.83rem;line-height:1.65;margin-top:.55rem;padding-left:.75rem;border-left:3px solid var(--soft);color:#444;}
+.glos-ex{margin-top:.65rem;padding:.62rem .82rem;background:rgba(0,119,182,.06);border-radius:8px;font-size:.8rem;line-height:1.6;color:var(--blue);}
+.glos-exlbl{font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;opacity:.62;display:block;margin-bottom:.2rem;}
+.glos-tag{display:inline-block;font-size:.63rem;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.04em;padding:.14rem .48rem;border-radius:5px;margin-top:.6rem;margin-right:.26rem;}
+.glos-empty{text-align:center;padding:3rem 1rem;opacity:.32;font-family:'Syne',sans-serif;}
+</style>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+<div class="home-inner">
+  <div class="home-tag">Session III · Analytical Thinking</div>
+  <h1 class="home-title">Analytical<br><em>Thinking</em> Game</h1>
+  <p class="home-desc">Kiểm tra kiến thức về tư duy phân tích qua các chế độ chơi khác nhau.</p>
+
+  <div class="mode-grid" id="mode-grid">
+    <div class="mode-card selected" id="mc-quiz" onclick="selMode('quiz')">
+      <div class="mode-icon">🧠</div>
+      <div class="mode-name">Quiz</div>
+      <div class="mode-badge" id="badge-quiz">— câu · tối đa 100đ/câu</div>
+      <div class="mode-desc">Trắc nghiệm 4 đáp án. 1 gợi ý tùy chọn. Chọn sai sẽ trừ điểm.</div>
+      <div class="mode-best" id="best-quiz"></div>
+    </div>
+    <div class="mode-card" id="mc-wordle" onclick="selMode('wordle')">
+      <div class="mode-icon">🟩</div>
+      <div class="mode-name">Wordle</div>
+      <div class="mode-badge" id="badge-wordle">— câu · tối đa 100đ/câu</div>
+      <div class="mode-desc">Đoán từ khoá theo kiểu Wordle. Xanh = đúng vị trí. 5 lần thử.</div>
+      <div class="mode-best" id="best-wordle"></div>
+    </div>
+    <div class="mode-card" id="mc-match" onclick="selMode('match')">
+      <div class="mode-icon">🔗</div>
+      <div class="mode-name">Term Match</div>
+      <div class="mode-badge" id="badge-match">— cặp · tối đa 100đ/cặp</div>
+      <div class="mode-desc">Nối thuật ngữ A/B/C ↔ định nghĩa 1/2/3. 4 lần thử.</div>
+      <div class="mode-best" id="best-match"></div>
+    </div>
+    <div class="mode-card" id="mc-glossary" onclick="openGlossary()" style="border-color:rgba(0,119,182,.3);">
+      <div class="mode-icon">📖</div>
+      <div class="mode-name">Từ điển</div>
+      <div class="mode-badge" id="badge-glossary">— thuật ngữ · EN + VI</div>
+      <div class="mode-desc">Tra cứu định nghĩa, ví dụ và phân loại theo nhóm.</div>
+      <div class="mode-best"></div>
+    </div>
+  </div>
+
+  <div class="count-row">
+    <span class="count-label">SỐ CÂU:</span>
+    <input class="count-input" type="number" id="count-inp" value="10" min="2">
+    <span class="count-note" id="count-note">tối đa — câu</span>
+  </div>
+
+  <div class="home-actions">
+    <button class="btn btn-primary" id="start-btn" onclick="startGame()">Bắt đầu →</button>
+    <button class="btn btn-ghost" onclick="openAch()">🏆 Thành tích</button>
+  </div>
+
+  <div class="home-footer">Một sản phẩm của Tiểu đội 8</div>
+</div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div class="game-header">
+    <div class="gh-left">
+      <span class="game-mode-label" id="mode-label">QUIZ</span>
+      <span class="game-topic">Analytical Thinking</span>
+    </div>
+    <div class="gh-mid">
+      <div class="progress-bar-bg"><div class="progress-bar" id="prog-bar" style="width:0%"></div></div>
+      <span class="q-counter" id="q-counter">1/10</span>
+    </div>
+    <div class="gh-right">
+      <span class="timer-disp" id="timer-disp">0:00</span>
+      <span class="score-live">Score: <span id="score-live">0</span></span>
+      <button class="btn btn-exit" onclick="confirmExit()">✕ Thoát</button>
+    </div>
+  </div>
+  <div class="rules-bar" id="rules-bar"></div>
+  <div class="game-body" id="game-body"></div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="result-body">
+    <div class="result-tag">Kết quả</div>
+    <h2 class="result-title" id="result-title">Hoàn thành!</h2>
+    <div class="score-ring">
+      <svg width="115" height="115" viewBox="0 0 115 115">
+        <circle class="score-ring-bg" cx="57.5" cy="57.5" r="48"/>
+        <circle class="score-ring-fill" id="ring-fill" cx="57.5" cy="57.5" r="48" stroke-dasharray="301.6" stroke-dashoffset="301.6"/>
+      </svg>
+      <div class="score-ring-text">
+        <span class="score-num" id="final-score">0</span>
+        <span class="score-max" id="final-max">/0</span>
+      </div>
+    </div>
+    <div class="result-grade" id="result-grade"></div>
+    <div class="result-time" id="result-time"></div>
+    <div id="new-best-banner" style="display:none" class="new-best-banner">🏆 Kỷ lục mới!</div>
+    <div class="result-breakdown" id="result-breakdown"></div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="startGame()">Chơi lại ↺</button>
+      <button class="btn btn-ghost" onclick="openAch()">🏆 Thành tích</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Trang chủ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT -->
+<div id="achievement" class="screen">
+  <div class="ach-header">
+    <span class="ach-title">🏆 Thành tích</span>
+    <button class="btn btn-exit" onclick="closeAch()">✕ Đóng</button>
+  </div>
+  <div class="ach-body" id="ach-body"></div>
+</div>
+
+<!-- GLOSSARY -->
+<div id="glossary" class="screen">
+  <div class="glos-header">
+    <div class="glos-hl">
+      <span class="glos-sup">Session III · Analytical Thinking</span>
+      <span class="glos-htitle">📖 Từ điển Khái niệm</span>
+    </div>
+    <div class="glos-sw">
+      <span class="glos-si">🔍</span>
+      <input class="glos-search" id="glos-search" type="text" placeholder="Tìm thuật ngữ..." oninput="renderGlos()">
+    </div>
+    <button class="btn btn-exit" onclick="goHome()">✕ Thoát</button>
+  </div>
+  <div class="glos-frow" id="glos-frow"></div>
+  <div class="glos-count" id="glos-count"></div>
+  <div class="glos-body" id="glos-body"></div>
+</div>
+
+<!-- EXIT MODAL -->
+<div class="modal-overlay" id="exit-modal">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Thoát khỏi game?</div>
+    <div class="modal-desc">Tiến trình và điểm số hiện tại sẽ bị mất.</div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('exit-modal')">Tiếp tục chơi</button>
+      <button class="btn btn-danger" onclick="goHome()">Thoát</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════ DATA (loaded from data.json) ════ */
+let DATA = null;
+
+async function loadData() {
+  try {
+    const r = await fetch('data.json');
+    DATA = await r.json();
+  } catch(e) {
+    // fallback: data embedded (for local file:// use)
+    DATA = FALLBACK_DATA;
+  }
+  initHome();
+}
+
+/* ════ STATE ════ */
+let mode = 'quiz';
+let questions = [], qIdx = 0, score = 0, maxScore = 0;
+let answered = false;
+let qPenalty = 0, quizWrong = 0, wordleTries = 0, matchTries = 0;
+let matchSubmitted = false;
+let timerInterval = null, timerSeconds = 0;
+let countdownMode = false; // future: countdown
+let gameStartTime = 0;
+let prevScreen = 'home';
+let glosActiveFilter = 'all';
+
+/* ════ SCORING HELPERS ════ */
+// Base 100pts/question. Penalties deducted on correct answer.
+// Round: floor for deductions, ceil for earned (favours player)
+function calcEarned(penalty) {
+  return Math.max(0, Math.ceil(100 - penalty));
+}
+// Quiz: each wrong = 100/(n_choices) penalty, max 80 deducted
+function quizPenalty(wrongCount, nChoices) {
+  const perWrong = Math.floor(100 / nChoices);
+  return Math.min(80, wrongCount * perWrong);
+}
+// Wordle: each wrong try = floor(100/5) = 20pts deducted, max 80
+function wordlePenalty(wrongTries) {
+  return Math.min(80, wrongTries * 20);
+}
+// Match: each wrong submission = 25pt deducted per pair in set, max 75
+function matchPenaltyForPair(wrongSubs) {
+  return Math.min(75, wrongSubs * 25);
+}
+
+/* ════ INIT HOME ════ */
+function initHome() {
+  // Update badges from data
+  const q = DATA.quiz.length, w = DATA.wordle.length, m = DATA.match.length, g = DATA.glossary.length;
+  document.getElementById('badge-quiz').textContent = `${q} câu · tối đa 100đ/câu`;
+  document.getElementById('badge-wordle').textContent = `${w} câu · tối đa 100đ/câu`;
+  document.getElementById('badge-match').textContent = `${m} cặp · tối đa 100đ/cặp`;
+  document.getElementById('badge-glossary').textContent = `${g} thuật ngữ · EN + VI`;
+  // Count input max
+  updateCountNote();
+  document.getElementById('count-inp').addEventListener('input', updateCountNote);
+  // Load bests
+  refreshHomeBests();
+}
+
+function updateCountNote() {
+  const max = getModeMax();
+  document.getElementById('count-note').textContent = `tối đa ${max} câu`;
+  const inp = document.getElementById('count-inp');
+  inp.max = max;
+  if (parseInt(inp.value) > max) inp.value = max;
+  if (parseInt(inp.value) < 2) inp.value = 2;
+}
+
+function getModeMax() {
+  if (!DATA) return 10;
+  if (mode === 'quiz') return DATA.quiz.length;
+  if (mode === 'wordle') return DATA.wordle.length;
+  if (mode === 'match') return DATA.match.length;
+  return 10;
+}
+
+function selMode(m) {
+  if (m === 'glossary') { openGlossary(); return; }
+  mode = m;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('mc-' + m).classList.add('selected');
+  updateCountNote();
+}
+
+function refreshHomeBests() {
+  ['quiz','wordle','match'].forEach(m => {
+    const key = `best_${m}`;
+    const all = JSON.parse(localStorage.getItem(key) || '{}');
+    const el = document.getElementById('best-' + m);
+    if (!el) return;
+    const entries = Object.entries(all);
+    if (!entries.length) { el.textContent = ''; return; }
+    // Show best score across all question counts
+    let best = entries.reduce((a, [k, v]) => v.score > a.score ? {score: v.score, max: v.max, n: k} : a, {score:-1,max:0,n:0});
+    el.textContent = `🏆 ${best.score}/${best.max} (${best.n} câu)`;
+  });
+}
+
+/* ════ GAME START ════ */
+function startGame() {
+  if (!DATA) return;
+  const n = Math.max(2, Math.min(parseInt(document.getElementById('count-inp').value) || 10, getModeMax()));
+  document.getElementById('count-inp').value = n;
+
+  qIdx = 0; score = 0; answered = false; qPenalty = 0; quizWrong = 0; wordleTries = 0; matchTries = 0;
+
+  if (mode === 'quiz') {
+    questions = shuffle([...DATA.quiz]).slice(0, n);
+    maxScore = n * 100;
+  } else if (mode === 'wordle') {
+    questions = shuffle([...DATA.wordle]).slice(0, n);
+    maxScore = n * 100;
+  } else {
+    questions = shuffle([...DATA.match]).slice(0, n);
+    maxScore = n * 100;
+  }
+
+  showScreen('game');
+  const labels = {quiz:'QUIZ', wordle:'WORDLE', match:'TERM MATCH'};
+  document.getElementById('mode-label').textContent = labels[mode];
+
+  // Rules bar
+  const rulesText = {
+    quiz: '<strong>Quiz:</strong> Trắc nghiệm 4 đáp án · 1 gợi ý (−25đ) · Mỗi lần sai −25đ · Tối đa 100đ/câu',
+    wordle: '<strong>Wordle:</strong> Đoán từ khoá · 🟩 đúng vị trí · 5 lần thử · Mỗi lần sai −20đ · Tối đa 100đ/câu',
+    match: '<strong>Term Match:</strong> Chọn số tương ứng cho mỗi thuật ngữ · 4 lần thử · Mỗi lần sai −25đ/cặp · Tối đa 100đ/cặp'
+  };
+  document.getElementById('rules-bar').innerHTML = rulesText[mode];
+
+  startTimer();
+  renderQuestion();
+}
+
+/* ════ TIMER ════ */
+function startTimer() {
+  clearInterval(timerInterval);
+  timerSeconds = 0;
+  gameStartTime = Date.now();
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  document.getElementById('timer-disp').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+/* ════ RENDER QUESTION ════ */
+function renderQuestion() {
+  const total = questions.length;
+  document.getElementById('prog-bar').style.width = (qIdx / total * 100) + '%';
+  document.getElementById('q-counter').textContent = `${qIdx + 1} / ${total}`;
+  document.getElementById('score-live').textContent = score;
+  const body = document.getElementById('game-body');
+  body.innerHTML = '';
+  answered = false; qPenalty = 0; quizWrong = 0; wordleTries = 0; matchTries = 0; matchSubmitted = false;
+  if (mode === 'quiz') renderQuiz(body);
+  else if (mode === 'wordle') renderWordle(body);
+  else renderMatch(body);
+}
+
+function next() {
+  qIdx++;
+  if (qIdx >= questions.length) finishGame();
+  else renderQuestion();
+}
+
+/* ════ QUIZ ════ */
+function renderQuiz(body) {
+  const q = questions[qIdx];
+  const L = ['A','B','C','D'];
+  const nChoices = q.choices.length;
+  let html = `<p class="q-label">Câu ${qIdx+1} / ${questions.length}</p>
+    <p class="q-text">${q.q}</p>
+    ${q.ctx ? `<p class="q-context">📋 ${q.ctx}</p>` : ''}
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;align-self:flex-start">
+      <button class="btn btn-hint" id="hint-btn" onclick="showQuizHint()">💡 Gợi ý (−25đ)</button>
+    </div>
+    <div id="hint-area" style="width:100%"></div>
+    <div class="choices" id="choices">`;
+  q.choices.forEach((c, i) => {
+    html += `<button class="choice-btn" id="cb-${i}" onclick="checkQuiz(${i})">
+      <span class="choice-letter">${L[i]}</span><span>${c}</span></button>`;
+  });
+  html += `</div>
+    <div class="penalty-info" id="penalty-info">Tối đa +100 điểm nếu đúng ngay lần đầu không dùng gợi ý</div>
+    <div id="feedback"></div>
+    <div class="next-wrap" id="next-wrap" style="display:none">
+      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Câu tiếp →':'Xem kết quả →'}</button>
+    </div>`;
+  body.innerHTML = html;
+}
+
+let quizHintUsed = false;
+function showQuizHint() {
+  if (answered || quizHintUsed) return;
+  quizHintUsed = true;
+  qPenalty = Math.min(80, qPenalty + 25);
+  document.getElementById('hint-btn').disabled = true;
+  const q = questions[qIdx];
+  document.getElementById('hint-area').innerHTML =
+    `<div class="hint-box" style="margin-bottom:.75rem"><span class="hint-label">Gợi ý</span><span class="hint-text">${q.hint}</span></div>`;
+  updateQuizInfo();
+}
+
+function updateQuizInfo() {
+  const earned = calcEarned(qPenalty);
+  const el = document.getElementById('penalty-info');
+  if (el) el.textContent = qPenalty > 0
+    ? `Nếu đúng ngay bây giờ: +${earned} điểm (đã trừ ${qPenalty}đ)`
+    : 'Tối đa +100 điểm nếu đúng ngay lần đầu không dùng gợi ý';
+}
+
+function checkQuiz(chosen) {
+  if (answered) return;
+  const q = questions[qIdx];
+  const ok = chosen === q.answer;
+  const btns = document.querySelectorAll('.choice-btn');
+  btns[chosen].classList.add(ok ? 'correct' : 'wrong');
+  btns[chosen].disabled = true;
+  if (ok) {
+    btns.forEach((b,i) => { b.disabled = true; if (i === q.answer) b.classList.add('correct'); });
+    answered = true;
+    const earned = calcEarned(qPenalty);
+    score += earned;
+    document.getElementById('score-live').textContent = score;
+    const lbl = qPenalty > 0 ? `✅ Đúng! +${earned} điểm (trừ ${qPenalty}đ)` : '✅ Chính xác! +100 điểm';
+    document.getElementById('feedback').innerHTML = `<div class="feedback-box correct-fb"><div class="feedback-title">${lbl}</div><div>${q.explain}</div></div>`;
+    document.getElementById('next-wrap').style.display = 'flex';
+  } else {
+    quizWrong++;
+    qPenalty = Math.min(80, qPenalty + 25);
+    updateQuizInfo();
+    setTimeout(() => {
+      btns[chosen].classList.remove('wrong');
+      btns[chosen].disabled = false;
+    }, 550);
+  }
+}
+
+/* ════ WORDLE ════ */
+let wordleGuesses = [];
+let wordleKbState = {};
+
+function renderWordle(body) {
+  const q = questions[qIdx];
+  const target = q.target.toUpperCase();
+  const len = target.length;
+  const maxTries = 5;
+  wordleGuesses = [];
+  wordleKbState = {};
+
+  let gridHtml = '<div class="wordle-grid" id="wgrid">';
+  for (let r = 0; r < maxTries; r++) {
+    gridHtml += '<div class="wordle-row" id="wrow-' + r + '">';
+    for (let c = 0; c < len; c++) {
+      gridHtml += `<div class="wordle-cell" id="wc-${r}-${c}"></div>`;
+    }
+    gridHtml += '</div>';
+  }
+  gridHtml += '</div>';
+
+  const kbRows = [['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['ENTER','Z','X','C','V','B','N','M','⌫']];
+  let kbHtml = '<div class="wordle-kb" id="wkb">';
+  kbRows.forEach(row => {
+    kbHtml += '<div class="wordle-kb-row">';
+    row.forEach(k => {
+      const w = (k === 'ENTER' || k === '⌫') ? ' wide' : '';
+      kbHtml += `<button class="kb-key${w}" id="kb-${k}" onclick="wkbPress('${k}')">${k}</button>`;
+    });
+    kbHtml += '</div>';
+  });
+  kbHtml += '</div>';
+
+  body.innerHTML = `
+    <p class="q-label">Wordle · Câu ${qIdx+1} / ${questions.length}</p>
+    <p class="q-text">${q.q}</p>
+    <p class="wordle-meta" id="wordle-meta">Đoán từ khoá (${len} chữ cái) · ${maxTries} lần thử · Tối đa +100đ</p>
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:.5rem">
+      ${gridHtml}
+      <div class="wordle-inp-row">
+        <input class="wordle-input" id="wordle-inp" maxlength="${len}" placeholder="${'_'.repeat(len)}" autocomplete="off" spellcheck="false"
+          oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" onkeydown="if(event.key==='Enter')submitWordle()">
+        <button class="btn btn-primary" style="padding:.65rem 1rem;font-size:.82rem" onclick="submitWordle()">Enter</button>
+      </div>
+      ${kbHtml}
+    </div>
+    <div class="penalty-info" id="penalty-info">Tối đa +100đ nếu đúng lần đầu</div>
+    <div id="feedback"></div>
+    <div class="next-wrap" id="next-wrap" style="display:none">
+      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Câu tiếp →':'Xem kết quả →'}</button>
+    </div>`;
+  document.getElementById('wordle-inp').focus();
+}
+
+function wkbPress(k) {
+  if (answered) return;
+  const inp = document.getElementById('wordle-inp');
+  if (!inp) return;
+  if (k === '⌫') {
+    inp.value = inp.value.slice(0, -1);
+  } else if (k === 'ENTER') {
+    submitWordle();
+  } else {
+    const q = questions[qIdx];
+    if (inp.value.length < q.target.length) inp.value += k;
+  }
+  inp.focus();
+}
+
+function submitWordle() {
+  if (answered) return;
+  const q = questions[qIdx];
+  const target = q.target.toUpperCase();
+  const len = target.length;
+  const inp = document.getElementById('wordle-inp');
+  const guess = (inp.value || '').toUpperCase().trim();
+  if (guess.length !== len) {
+    inp.classList.add('shake');
+    setTimeout(() => inp.classList.remove('shake'), 300);
+    return;
+  }
+
+  const row = wordleTries;
+  const result = evalGuess(guess, target);
+  // Fill grid row
+  for (let c = 0; c < len; c++) {
+    const cell = document.getElementById(`wc-${row}-${c}`);
+    cell.textContent = guess[c];
+    cell.className = 'wordle-cell ' + result[c];
+    // Update kb
+    const cur = wordleKbState[guess[c]];
+    if (result[c] === 'correct' || (!cur)) wordleKbState[guess[c]] = result[c];
+    else if (result[c] === 'present' && cur !== 'correct') wordleKbState[guess[c]] = result[c];
+    else if (result[c] === 'absent' && !cur) wordleKbState[guess[c]] = result[c];
+    const kb = document.getElementById('kb-' + guess[c]);
+    if (kb) kb.className = 'kb-key ' + wordleKbState[guess[c]];
+  }
+  wordleTries++;
+  inp.value = '';
+
+  const won = result.every(r => r === 'correct');
+  if (won) {
+    answered = true;
+    const penalty = wordlePenalty(wordleTries - 1);
+    const earned = calcEarned(penalty);
+    score += earned;
+    document.getElementById('score-live').textContent = score;
+    const lbl = penalty > 0 ? `✅ Đúng! +${earned} điểm (${wordleTries} lần thử, trừ ${penalty}đ)` : '✅ Đúng lần đầu! +100 điểm 🎉';
+    document.getElementById('feedback').innerHTML = `<div class="feedback-box correct-fb"><div class="feedback-title">${lbl}</div><div>${q.explain}</div></div>`;
+    document.getElementById('next-wrap').style.display = 'flex';
+    document.getElementById('wordle-inp').disabled = true;
+  } else if (wordleTries >= 5) {
+    answered = true;
+    document.getElementById('feedback').innerHTML = `<div class="feedback-box wrong-fb"><div class="feedback-title">❌ Hết lượt! Đáp án: <strong>${target}</strong></div><div>${q.explain}</div></div>`;
+    document.getElementById('next-wrap').style.display = 'flex';
+    document.getElementById('wordle-inp').disabled = true;
+  } else {
+    const penalty = wordlePenalty(wordleTries);
+    const earned = calcEarned(penalty);
+    document.getElementById('penalty-info').textContent = `Lần thử ${wordleTries+1}/5 · Nếu đúng ngay bây giờ: +${earned} điểm`;
+  }
+}
+
+function evalGuess(guess, target) {
+  const len = target.length;
+  const res = Array(len).fill('absent');
+  const tLeft = target.split('');
+  // First pass: correct
+  for (let i = 0; i < len; i++) {
+    if (guess[i] === target[i]) { res[i] = 'correct'; tLeft[i] = null; }
+  }
+  // Second pass: present
+  for (let i = 0; i < len; i++) {
+    if (res[i] === 'correct') continue;
+    const idx = tLeft.indexOf(guess[i]);
+    if (idx !== -1) { res[i] = 'present'; tLeft[idx] = null; }
+  }
+  return res;
+}
+
+/* ════ MATCH ════ */
+let matchPairs = [];
+let matchWrongPerPair = {};
+
+function renderMatch(body) {
+  matchPairs = questions.map((p, i) => ({...p, idx: i}));
+  const n = matchPairs.length;
+  matchWrongPerPair = {};
+  matchPairs.forEach((_, i) => matchWrongPerPair[i] = 0);
+
+  // Shuffle defs for display
+  const defOrder = shuffle(matchPairs.map((p, i) => i));
+
+  let tableRows = '';
+  matchPairs.forEach((p, i) => {
+    const letter = String.fromCharCode(65 + i);
+    const opts = Array.from({length: n + 1}, (_, j) => `<option value="${j}"${j===0?' selected':''}>${j===0?'—':j}</option>`).join('');
+    tableRows += `<tr>
+      <td><div class="mtd-term">${letter}. ${p.term}</div></td>
+      <td class="mtd-lbl">→</td>
+      <td><select class="mtd-sel" id="msel-${i}">${opts}</select></td>
+      <td class="mtd-lbl">·</td>
+    </tr>`;
+  });
+
+  let defList = '';
+  defOrder.forEach((realIdx, pos) => {
+    defList += `<p style="font-size:.8rem;line-height:1.55;padding:.3rem 0;border-bottom:1px solid var(--soft)"><span class="mtd-num">${pos+1}.</span>${matchPairs[realIdx].def}</p>`;
+  });
+  // Store mapping: display position → real index
+  window._matchDefMap = defOrder; // defOrder[displayPos] = realPairIdx
+
+  body.innerHTML = `
+    <p class="q-label">Term Match · ${n} cặp</p>
+    <p class="q-text">Ghép thuật ngữ với số thứ tự định nghĩa đúng</p>
+    <p class="match-intro">👈 Chọn số (1–${n}) cho mỗi thuật ngữ · 0 = chưa chọn</p>
+    <table class="match-table" id="mtable">${tableRows}</table>
+    <div style="margin:.6rem 0;width:100%;background:rgba(0,0,0,.04);border-radius:8px;padding:.75rem .95rem">${defList}</div>
+    <div class="match-bottom">
+      <button class="btn btn-primary" id="match-submit-btn" onclick="submitMatch()">Kiểm tra ✓</button>
+      <span class="match-tries" id="match-tries-info">Còn 4 lần thử</span>
+    </div>
+    <div id="feedback"></div>
+    <div class="next-wrap" id="next-wrap" style="display:none">
+      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Câu tiếp →':'Xem kết quả →'}</button>
+    </div>`;
+}
+
+function submitMatch() {
+  if (matchSubmitted && matchTries >= 4) return;
+  const n = matchPairs.length;
+  const defMap = window._matchDefMap; // defMap[displayPos] = realPairIdx
+  // Reverse: realPairIdx → displayPos+1
+  const realToDisplay = {};
+  defMap.forEach((realIdx, pos) => realToDisplay[realIdx] = pos + 1);
+
+  let allCorrect = true;
+  let anyWrong = false;
+  let correctCount = 0;
+
+  matchPairs.forEach((p, i) => {
+    const sel = document.getElementById(`msel-${i}`);
+    const chosen = parseInt(sel.value);
+    const correct = realToDisplay[i]; // correct display number
+    if (chosen === correct) {
+      sel.className = 'mtd-sel c';
+      sel.disabled = true;
+      correctCount++;
+    } else {
+      sel.className = 'mtd-sel w';
+      allCorrect = false;
+      anyWrong = true;
+      matchWrongPerPair[i]++;
+    }
+  });
+
+  matchTries++;
+
+  if (allCorrect) {
+    matchSubmitted = true;
+    answered = true;
+    // Score: each pair earns calcEarned(matchPenaltyForPair(wrongCount))
+    let totalEarned = 0;
+    matchPairs.forEach((_, i) => totalEarned += calcEarned(matchPenaltyForPair(matchWrongPerPair[i])));
+    score += totalEarned;
+    document.getElementById('score-live').textContent = score;
+    document.getElementById('feedback').innerHTML = `<div class="feedback-box correct-fb"><div class="feedback-title">✅ Tất cả đúng! +${totalEarned} điểm</div></div>`;
+    document.getElementById('match-submit-btn').disabled = true;
+    document.getElementById('next-wrap').style.display = 'flex';
+  } else if (matchTries >= 4) {
+    matchSubmitted = true;
+    answered = true;
+    // Reveal answers
+    const defMap = window._matchDefMap;
+    const realToDisplay = {};
+    defMap.forEach((realIdx, pos) => realToDisplay[realIdx] = pos + 1);
+    matchPairs.forEach((p, i) => {
+      const sel = document.getElementById(`msel-${i}`);
+      if (!sel.disabled) {
+        sel.value = realToDisplay[i];
+        sel.className = 'mtd-sel c';
+        sel.disabled = true;
+      }
+    });
+    let totalEarned = 0;
+    matchPairs.forEach((_, i) => totalEarned += calcEarned(matchPenaltyForPair(matchWrongPerPair[i])));
+    score += totalEarned;
+    document.getElementById('score-live').textContent = score;
+    document.getElementById('feedback').innerHTML = `<div class="feedback-box wrong-fb"><div class="feedback-title">Hết lượt thử. Đáp án đã hiển thị. +${totalEarned} điểm cho các cặp đúng.</div></div>`;
+    document.getElementById('match-submit-btn').disabled = true;
+    document.getElementById('next-wrap').style.display = 'flex';
+  } else {
+    const remaining = 4 - matchTries;
+    document.getElementById('match-tries-info').textContent = `Còn ${remaining} lần thử · Mỗi cặp sai thêm −25đ`;
+    // Reset wrong cells after a moment
+    setTimeout(() => {
+      matchPairs.forEach((_, i) => {
+        const sel = document.getElementById(`msel-${i}`);
+        if (sel && !sel.disabled) sel.className = 'mtd-sel';
+      });
+    }, 700);
+  }
+}
+
+/* ════ FINISH ════ */
+function finishGame() {
+  stopTimer();
+  const elapsed = timerSeconds;
+  showScreen('result');
+
+  const pct = maxScore > 0 ? Math.round(score / maxScore * 100) : 0;
+  const grade = pct >= 90 ? '🏆 Xuất sắc!' : pct >= 75 ? '🌟 Tốt!' : pct >= 55 ? '💪 Khá' : '📚 Cần ôn thêm';
+
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-max').textContent = '/' + maxScore;
+  document.getElementById('result-title').textContent = grade.split(' ')[1] || 'Hoàn thành!';
+  document.getElementById('result-grade').textContent = `${grade} · ${pct}%`;
+  document.getElementById('result-time').textContent = `Thời gian: ${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}`;
+
+  // Ring animation
+  const circ = 2 * Math.PI * 48;
+  setTimeout(() => {
+    document.getElementById('ring-fill').style.strokeDashoffset = circ * (1 - pct/100);
+  }, 100);
+
+  // Breakdown
+  const n = questions.length;
+  const breakdown = `
+    <div class="rb-row"><span class="rb-label">Mode</span><span class="rb-val">${mode.toUpperCase()}</span></div>
+    <div class="rb-row"><span class="rb-label">Số câu</span><span class="rb-val">${n}</span></div>
+    <div class="rb-row"><span class="rb-label">Điểm</span><span class="rb-val">${score} / ${maxScore}</span></div>
+    <div class="rb-row"><span class="rb-label">Tỉ lệ</span><span class="rb-val">${pct}%</span></div>
+    <div class="rb-row"><span class="rb-label">Thời gian</span><span class="rb-val">${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}</span></div>`;
+  document.getElementById('result-breakdown').innerHTML = breakdown;
+
+  // Save & check best
+  const key = `best_${mode}`;
+  const countKey = `${n}`;
+  const all = JSON.parse(localStorage.getItem(key) || '{}');
+  const prev = all[countKey];
+  let isNewBest = false;
+  if (!prev || score > prev.score || (score === prev.score && elapsed < prev.time)) {
+    all[countKey] = {score, max: maxScore, time: elapsed, pct};
+    localStorage.setItem(key, JSON.stringify(all));
+    isNewBest = true;
+  }
+  document.getElementById('new-best-banner').style.display = isNewBest ? 'block' : 'none';
+  refreshHomeBests();
+}
+
+/* ════ ACHIEVEMENT ════ */
+function openAch() {
+  prevScreen = document.querySelector('.screen.active')?.id || 'home';
+  showScreen('achievement');
+  renderAch();
+}
+
+function closeAch() {
+  showScreen(prevScreen);
+}
+
+function renderAch() {
+  const modes = [
+    {id:'quiz', icon:'🧠', name:'Quiz'},
+    {id:'wordle', icon:'🟩', name:'Wordle'},
+    {id:'match', icon:'🔗', name:'Term Match'},
+  ];
+  let html = '';
+  modes.forEach(m => {
+    const key = `best_${m.id}`;
+    const all = JSON.parse(localStorage.getItem(key) || '{}');
+    html += `<div class="ach-card">
+      <div class="ach-cat">Mode</div>
+      <div class="ach-icon">${m.icon}</div>
+      <div class="ach-name">${m.name}</div>`;
+    if (!Object.keys(all).length) {
+      html += `<div class="ach-stat"><span class="ach-stat-lbl">Chưa có dữ liệu</span><span class="ach-stat-val empty">—</span></div>`;
+    } else {
+      const entries = Object.entries(all).sort((a,b) => parseInt(b[0]) - parseInt(a[0]));
+      entries.forEach(([n, v]) => {
+        const t = v.time ? `${Math.floor(v.time/60)}:${(v.time%60).toString().padStart(2,'0')}` : '—';
+        html += `<div class="ach-stat"><span class="ach-stat-lbl">${n} câu · Best score</span><span class="ach-stat-val">${v.score}/${v.max}</span></div>
+          <div class="ach-stat"><span class="ach-stat-lbl">${n} câu · Best time</span><span class="ach-stat-val">${t}</span></div>`;
+      });
+    }
+    html += `</div>`;
+  });
+  document.getElementById('ach-body').innerHTML = html || '<div class="ach-empty">Chưa có dữ liệu. Hãy chơi một ván!</div>';
+}
+
+/* ════ GLOSSARY ════ */
+function openGlossary() {
+  prevScreen = 'home';
+  showScreen('glossary');
+  document.getElementById('glos-search').value = '';
+  glosActiveFilter = 'all';
+  buildGlosFilters();
+  renderGlos();
+}
+
+function buildGlosFilters() {
+  const wrap = document.getElementById('glos-frow');
+  let html = `<div class="fchip active" id="fc-all" onclick="setGlosFilter('all')">Tất cả</div>`;
+  DATA.glossaryCats.forEach(c => {
+    html += `<div class="fchip" id="fc-${c.id}" onclick="setGlosFilter('${c.id}')">${c.label}</div>`;
+  });
+  wrap.innerHTML = html;
+}
+
+function setGlosFilter(id) {
+  glosActiveFilter = id;
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
+  document.getElementById('fc-' + id).classList.add('active');
+  renderGlos();
+}
+
+function renderGlos() {
+  const q = (document.getElementById('glos-search').value || '').toLowerCase().trim();
+  const items = DATA.glossary.filter(g => {
+    const mc = glosActiveFilter === 'all' || g.cat === glosActiveFilter;
+    const mq = !q || g.en.toLowerCase().includes(q) || g.vi.toLowerCase().includes(q) || (g.defVi||'').toLowerCase().includes(q) || (g.defEn||'').toLowerCase().includes(q);
+    return mc && mq;
+  });
+  document.getElementById('glos-count').textContent = `Hiển thị ${items.length} / ${DATA.glossary.length} thuật ngữ`;
+  const body = document.getElementById('glos-body');
+  if (!items.length) { body.innerHTML = '<div class="glos-empty">🔍 Không tìm thấy thuật ngữ phù hợp</div>'; return; }
+
+  let html = '';
+  if (glosActiveFilter === 'all') {
+    DATA.glossaryCats.forEach(cat => {
+      const catItems = items.filter(g => g.cat === cat.id);
+      if (!catItems.length) return;
+      html += `<div class="glos-slabel">${cat.label}</div>`;
+      catItems.forEach(g => html += buildGlosCard(g));
+    });
+  } else {
+    items.forEach(g => html += buildGlosCard(g));
+  }
+  body.innerHTML = html;
+}
+
+function buildGlosCard(g) {
+  const cat = DATA.glossaryCats.find(c => c.id === g.cat) || {color:'#888'};
+  const tags = (g.tags||[]).map(t => `<span class="glos-tag" style="background:${cat.color}20;color:${cat.color}">${t}</span>`).join('');
+  return `<div class="glos-card" onclick="this.classList.toggle('open')">
+    <div class="glos-ch">
+      <div class="glos-dot" style="background:${cat.color}"></div>
+      <div class="glos-terms"><div class="glos-en">${g.en}</div><div class="glos-vi">${g.vi}</div></div>
+      <span class="glos-chev">▼</span>
+    </div>
+    <div class="glos-cb">
+      <div class="glos-den">${g.defEn}</div>
+      <div class="glos-dvi">${g.defVi}</div>
+      ${g.example ? `<div class="glos-ex"><span class="glos-exlbl">Ví dụ thực tế</span>${g.example}</div>` : ''}
+      <div>${tags}</div>
+    </div>
+  </div>`;
+}
+
+/* ════ UTILS ════ */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); el.style.display = 'flex'; }
+  document.querySelectorAll('.screen:not(.active)').forEach(s => s.style.display = 'none');
+}
+
+function goHome() {
+  stopTimer();
+  closeModal('exit-modal');
+  showScreen('home');
+  refreshHomeBests();
+}
+
+function confirmExit() {
+  document.getElementById('exit-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+/* ════ FALLBACK DATA (empty – requires data.json) ════ */
+const FALLBACK_DATA = {"quiz":[],"wordle":[],"match":[],"glossaryCats":[],"glossary":[]};
+
+/* ════ BOOT ════ */
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>
