@@ -355,8 +355,8 @@
     {
       "term": "Data Organization",
       "def": "Thu thập, phân loại và cấu trúc dữ liệu để phân tích hiệu quả"
-    },
-  ]
+    }
+  ],
   "glossaryCats": [
     {
       "id": "core",
