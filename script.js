@@ -3,7 +3,7 @@ let DATA = null;
 
 async function loadData() {
   try {
-    const r = await fetch('data.json');
+    const r = await fetch('data.enc');
     DATA = await r.json();
   } catch(e) {
     // fallback: data embedded (for local file:// use)
