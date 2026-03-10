@@ -199,39 +199,57 @@ function next() {
 
 /* ════ QUIZ ════ */
 function renderQuiz(body) {
+  quizHintUsed = false; // Quan trọng: Reset trạng thái gợi ý cho câu mới
+  
   const q = questions[qIdx];
   const L = ['A','B','C','D'];
-  const nChoices = q.choices.length;
+  
+  // Kiểm tra nếu điểm tiềm năng vẫn > 0 thì mới cho phép bấm gợi ý
+  const canUseHint = calcEarned(qPenalty) > 0;
+
   let html = `<p class="q-label">Câu ${qIdx+1} / ${questions.length}</p>
     <p class="q-text">${q.q}</p>
     ${q.ctx ? `<p class="q-context">📋 ${q.ctx}</p>` : ''}
     <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;align-self:flex-start">
-      <button class="btn btn-hint" id="hint-btn" onclick="showQuizHint()">💡 Gợi ý (−25đ)</button>
+      <button class="btn btn-hint" id="hint-btn" onclick="showQuizHint()" ${!canUseHint ? 'disabled' : ''}>💡 Gợi ý (−25đ)</button>
     </div>
     <div id="hint-area" style="width:100%"></div>
     <div class="choices" id="choices">`;
+    
   q.choices.forEach((c, i) => {
     html += `<button class="choice-btn" id="cb-${i}" onclick="checkQuiz(${i})">
       <span class="choice-letter">${L[i]}</span><span>${c}</span></button>`;
   });
+  
   html += `</div>
     <div class="penalty-info" id="penalty-info">Tối đa +100 điểm nếu đúng ngay lần đầu không dùng gợi ý</div>
     <div id="feedback"></div>
     <div class="next-wrap" id="next-wrap" style="display:none">
-      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Câu tiếp →':'Xem kết quả →'}</button>
+      <button class="btn btn-dark" onclick="next()">${qIdx+1 < questions.length ? 'Câu tiếp →' : 'Xem kết quả →'}</button>
     </div>`;
+    
   body.innerHTML = html;
 }
 
-let quizHintUsed = false;
+let quizHintUsed = false; // Biến này nên được reset trong renderQuiz
+
 function showQuizHint() {
   if (answered || quizHintUsed) return;
+  
   quizHintUsed = true;
-  qPenalty = Math.min(80, qPenalty + 25);
+  // Tăng mức phạt thêm 25đ khi dùng gợi ý
+  qPenalty = Math.min(80, qPenalty + 25); 
+  
   document.getElementById('hint-btn').disabled = true;
   const q = questions[qIdx];
-  document.getElementById('hint-area').innerHTML =
-    `<div class="hint-box" style="margin-bottom:.75rem"><span class="hint-label">Gợi ý</span><span class="hint-text">${q.hint}</span></div>`;
+  
+  document.getElementById('hint-area').innerHTML = `
+    <div class="hint-box" style="margin-bottom:.75rem">
+      <span class="hint-label">💡 Gợi ý</span>
+      <span class="hint-text">${q.hint}</span>
+    </div>`;
+    
+  // Cập nhật thông báo điểm tiềm năng cho người dùng thấy ngay
   updateQuizInfo();
 }
 
@@ -539,38 +557,55 @@ function submitMatch() {
 
 /* ════ FINISH ════ */
 function finishGame() {
-  stopTimer();
-  const elapsed = timerSeconds;
-  showScreen('result');
+stopTimer();
+    const elapsed = timerSeconds;
+    showScreen('result');
 
-  const pct = maxScore > 0 ? Math.round(score / maxScore * 100) : 0;
-  const grade = pct >= 90 ? '🏆 Xuất sắc!' : pct >= 75 ? '🌟 Tốt!' : pct >= 55 ? '💪 Khá' : '📚 Cần ôn thêm';
+    // 1. Tính toán số liệu
+    const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+    
+    // 2. Xác định lời nhận xét (Grade)
+    let gradeText = "";
+    let gradeClass = "";
+    if (pct >= 90) { gradeText = "Xuất sắc!"; gradeClass = "excellent"; }
+    else if (pct >= 75) { gradeText = "Tốt!"; gradeClass = "good"; }
+    else if (pct >= 50) { gradeText = "Khá"; gradeClass = "fair"; }
+    else { gradeText = "Cần ôn thêm"; gradeClass = "need-study"; }
 
-  document.getElementById('final-score').textContent = score;
-  document.getElementById('final-max').textContent = '/' + maxScore;
-  document.getElementById('result-title').textContent = grade.split(' ')[1] || 'Hoàn thành!';
-  document.getElementById('result-grade').textContent = `${grade} · ${pct}%`;
-  document.getElementById('result-time').textContent = `Thời gian: ${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}`;
+    // 3. Hiển thị lên giao diện
+    document.getElementById('result-title').textContent = gradeText;
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('final-max').textContent = `/${maxScore}`;
+    document.getElementById('result-grade').textContent = `${gradeText} · ${pct}%`;
+    
+    // Định dạng thời gian MM:SS
+    const timeStr = `${Math.floor(elapsed / 60)}:${(elapsed % 60).toString().padStart(2, '0')}`;
+    document.getElementById('result-time').textContent = `Thời gian: ${timeStr}`;
 
-  // Ring animation
-  const circ = 2 * Math.PI * 48;
-  setTimeout(() => {
-    document.getElementById('ring-fill').style.strokeDashoffset = circ * (1 - pct/100);
-  }, 100);
+    // 4. Hiệu ứng vòng tròn (SVG Circle)
+    const circle = document.getElementById('ring-fill');
+    const r = 48; // Bán kính
+    const circumference = 2 * Math.PI * r;
+    circle.style.strokeDasharray = circumference;
+    
+    // Hiệu ứng chạy vòng tròn sau 100ms
+    setTimeout(() => {
+        const offset = circumference - (pct / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }, 100);
 
-  // Breakdown
-  const n = questions.length;
-  const matchPairsPerRound = mode === 'match' && matchBatches.length > 0 ? matchBatches[0].length : 0;
-  const countLabel = mode === 'match'
-    ? `${n} vòng × ${matchPairsPerRound} cặp`
-    : `${n} câu`;
-  const breakdown = `
-    <div class="rb-row"><span class="rb-label">Mode</span><span class="rb-val">${mode.toUpperCase()}</span></div>
-    <div class="rb-row"><span class="rb-label">Số câu</span><span class="rb-val">${countLabel}</span></div>
-    <div class="rb-row"><span class="rb-label">Điểm</span><span class="rb-val">${score} / ${maxScore}</span></div>
-    <div class="rb-row"><span class="rb-label">Tỉ lệ</span><span class="rb-val">${pct}%</span></div>
-    <div class="rb-row"><span class="rb-label">Thời gian</span><span class="rb-val">${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}</span></div>`;
-  document.getElementById('result-breakdown').innerHTML = breakdown;
+    // 5. Hiển thị bảng chi tiết (Breakdown)
+    const n = questions.length;
+    const modeName = mode.toUpperCase();
+    
+    const breakdownHtml = `
+        <div class="rb-row"><span class="rb-label">Mode</span><span class="rb-val">${modeName}</span></div>
+        <div class="rb-row"><span class="rb-label">Số câu</span><span class="rb-val">${n} câu</span></div>
+        <div class="rb-row"><span class="rb-label">Điểm</span><span class="rb-val">${score} / ${maxScore}</span></div>
+        <div class="rb-row"><span class="rb-label">Tỉ lệ</span><span class="rb-val">${pct}%</span></div>
+        <div class="rb-row"><span class="rb-label">Thời gian</span><span class="rb-val">${timeStr}</span></div>
+    `;
+    document.getElementById('result-breakdown').innerHTML = breakdownHtml;
 
   // Save & check best
   const key = `best_${mode}`;
@@ -595,7 +630,26 @@ function openAch() {
 }
 
 function closeAch() {
-  showScreen(prevScreen);
+  showScreen(prevScreen);function renderQuiz(body) {
+  const q = questions[qIdx];
+  const L = ['A','B','C','D'];
+  
+  // Kiểm tra nếu điểm còn lại > 0 thì mới cho phép bấm gợi ý
+  const canUseHint = calcEarned(qPenalty) > 0;
+
+  let html = `<p class="q-label">Câu ${qIdx+1} / ${questions.length}</p>
+    <p class="q-text">${q.q}</p>
+    ${q.ctx ? `<p class="q-context">📋 ${q.ctx}</p>` : ''}
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;align-self:flex-start">
+      <button class="btn btn-hint" id="hint-btn" 
+        onclick="showQuizHint()" 
+        ${!canUseHint ? 'disabled' : ''}>💡 Gợi ý (−25đ)</button>
+    </div>
+    <div id="hint-area" style="width:100%"></div>
+    <div class="choices" id="choices">`;
+  
+  // ... (giữ nguyên phần render choices)
+}
 }
 
 function renderAch() {
