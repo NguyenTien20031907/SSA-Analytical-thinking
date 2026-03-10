@@ -203,4 +203,131 @@ body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);m
 .glos-ex{margin-top:.65rem;padding:.62rem .82rem;background:rgba(0,119,182,.06);border-radius:8px;font-size:.8rem;line-height:1.6;color:var(--blue);}
 .glos-exlbl{font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;opacity:.62;display:block;margin-bottom:.2rem;}
 .glos-tag{display:inline-block;font-size:.63rem;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.04em;padding:.14rem .48rem;border-radius:5px;margin-top:.6rem;margin-right:.26rem;}
+
 .glos-empty{text-align:center;padding:3rem 1rem;opacity:.32;font-family:'Syne',sans-serif;}
+/* --- MOBILE OPTIMIZATION --- */
+
+@media (max-width: 600px) {
+    /* 1. Tổng quan & Home */
+    #home {
+        padding: 1.5rem 1rem;
+    }
+    .home-title {
+        font-size: 2.2rem; /* Giảm cỡ chữ tiêu đề chính */
+        line-height: 1.1;
+    }
+    .mode-grid {
+        grid-template-columns: 1fr; /* Chuyển sang 1 cột duy nhất trên mobile */
+        gap: 0.8rem;
+    }
+    .mode-card {
+        padding: 1rem;
+    }
+
+    /* 2. Game Header (Thanh trạng thái trên cùng) */
+    .game-header {
+        padding: 0.6rem 0.8rem;
+        flex-direction: column; /* Xếp chồng các thành phần nếu quá hẹp */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .gh-mid {
+        width: 100%;
+        order: 3; /* Đưa thanh progress xuống dưới cùng trong header */
+        justify-content: space-between;
+    }
+    .progress-bar-bg {
+        flex: 1; /* Thanh progress dài ra chiếm chỗ trống */
+        width: auto;
+    }
+    .gh-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* 3. Game Body & Questions */
+    .game-body {
+        padding: 1rem 0.8rem;
+    }
+    .q-text {
+        font-size: 1.05rem;
+    }
+    .choice-btn {
+        padding: 0.8rem;
+        font-size: 0.82rem; /* Chữ nhỏ lại một chút để tránh bị tràn dòng */
+    }
+
+    /* 4. Wordle Mobile (Quan trọng nhất) */
+    .wordle-cell {
+        width: 40px; /* Thu nhỏ ô Wordle để không bị tràn màn hình */
+        height: 40px;
+        font-size: 1.1rem;
+        border-radius: 6px;
+    }
+    .wordle-row {
+        gap: 0.3rem;
+    }
+    .kb-key {
+        min-width: 26px; /* Thu nhỏ bàn phím ảo */
+        padding: 0.5rem 0.3rem;
+        font-size: 0.65rem;
+    }
+    .kb-key.wide {
+        min-width: 40px;
+    }
+
+    /* 5. Term Match (Chế độ nối từ) */
+    .match-table td {
+        display: block; /* Chuyển table thành dạng khối để dễ cuộn/nhìn */
+        width: 100%;
+        padding: 0.2rem 0;
+    }
+    .mtd-term {
+        display: inline-block;
+        margin-bottom: 0.4rem;
+    }
+    .mtd-sel {
+        width: 100%; /* Ô chọn đáp án chiếm hết chiều ngang */
+        margin: 0.4rem 0;
+    }
+    .match-table tr {
+        display: block;
+        margin-bottom: 1.2rem;
+        border-bottom: 1px dashed var(--soft);
+        padding-bottom: 0.8rem;
+    }
+
+    /* 6. Result & Achievement */
+    .result-actions {
+        flex-direction: column; /* Nút bấm xếp chồng lên nhau */
+        width: 100%;
+    }
+    .result-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .ach-body {
+        grid-template-columns: 1fr; /* Thành tích hiển thị 1 cột */
+    }
+
+    /* 7. Glossary (Từ điển) */
+    .glos-header {
+        padding: 0.8rem;
+    }
+    .glos-sw {
+        max-width: 100%; /* Thanh tìm kiếm chiếm hết chiều ngang */
+        margin-top: 0.5rem;
+    }
+    .glos-frow {padding: 0.5rem 0.8rem;
+    }
+}
+
+/* Thêm hiệu ứng cho màn hình cảm ứng */
+@media (hover: none) {
+    .mode-card:hover, .choice-btn:hover {
+        transform: none; /* Tắt hiệu ứng hover trên điện thoại vì không có chuột */
+    }
+    .choice-btn:active {
+        background-color: var(--soft); /* Thay bằng hiệu ứng nhấn (active) */
+    }
+}
