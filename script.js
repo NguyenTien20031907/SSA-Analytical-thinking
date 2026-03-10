@@ -60,20 +60,34 @@ function initHome() {
 }
 
 function updateCountNote() {
-  const max = getModeMax();
-  document.getElementById('count-note').textContent = `tối đa ${max} câu`;
   const inp = document.getElementById('count-inp');
+  const note = document.getElementById('count-note');
+  const max = getModeMax();
   inp.max = max;
+  inp.min = 2;
   if (parseInt(inp.value) > max) inp.value = max;
   if (parseInt(inp.value) < 2) inp.value = 2;
+  if (mode === 'match') {
+    const n = parseInt(inp.value) || 2;
+    const rounds = getMatchRounds(n);
+    note.textContent = `→ ${rounds} vòng × ${n} cặp`;
+  } else {
+    note.textContent = `tối đa ${max} câu`;
+  }
 }
 
 function getModeMax() {
   if (!DATA) return 10;
   if (mode === 'quiz') return DATA.quiz.length;
   if (mode === 'wordle') return DATA.wordle.length;
-  if (mode === 'match') return DATA.match.length;
+  if (mode === 'match') return Math.floor(DATA.match.length / 2); // max n such that floor(total/n)>=1, cap at half
   return 10;
+}
+
+// For match: returns how many rounds given n pairs-per-round
+function getMatchRounds(n) {
+  if (!DATA) return 1;
+  return Math.max(1, Math.floor(DATA.match.length / n));
 }
 
 function selMode(m) {
@@ -94,7 +108,8 @@ function refreshHomeBests() {
     if (!entries.length) { el.textContent = ''; return; }
     // Show best score across all question counts
     let best = entries.reduce((a, [k, v]) => v.score > a.score ? {score: v.score, max: v.max, n: k} : a, {score:-1,max:0,n:0});
-    el.textContent = `🏆 ${best.score}/${best.max} (${best.n} câu)`;
+    const bestLabel = m === 'match' ? best.n.replace('x', ' cặp × ') + ' vòng' : `${best.n} câu`;
+    el.textContent = `🏆 ${best.score}/${best.max} (${bestLabel})`;
   });
 }
 
@@ -113,8 +128,15 @@ function startGame() {
     questions = shuffle([...DATA.wordle]).slice(0, n);
     maxScore = n * 100;
   } else {
-    questions = shuffle([...DATA.match]).slice(0, n);
-    maxScore = n * 100;
+    // Match: n = pairs-per-round, rounds = floor(total/n)
+    const rounds = getMatchRounds(n);
+    const shuffled = shuffle([...DATA.match]);
+    matchBatches = [];
+    for (let r = 0; r < rounds; r++) {
+      matchBatches.push(shuffled.slice(r * n, r * n + n));
+    }
+    questions = matchBatches; // each "question" is a round (array of pairs)
+    maxScore = rounds * n * 100;
   }
 
   showScreen('game');
@@ -166,7 +188,7 @@ function renderQuestion() {
   answered = false; qPenalty = 0; quizWrong = 0; wordleTries = 0; matchTries = 0; matchSubmitted = false;
   if (mode === 'quiz') renderQuiz(body);
   else if (mode === 'wordle') renderWordle(body);
-  else renderMatch(body);
+  else renderMatch(body, matchBatches[qIdx]);
 }
 
 function next() {
@@ -392,9 +414,11 @@ function evalGuess(guess, target) {
 /* ════ MATCH ════ */
 let matchPairs = [];
 let matchWrongPerPair = {};
+let matchBatches = []; // array of rounds; each round = array of {term,def}
 
-function renderMatch(body) {
-  matchPairs = questions.map((p, i) => ({...p, idx: i}));
+function renderMatch(body, batch) {
+  const pairsSource = (mode === 'match' && batch) ? batch : questions;
+  matchPairs = pairsSource.map((p, i) => ({...p, idx: i}));
   const n = matchPairs.length;
   matchWrongPerPair = {};
   matchPairs.forEach((_, i) => matchWrongPerPair[i] = 0);
@@ -422,7 +446,7 @@ function renderMatch(body) {
   window._matchDefMap = defOrder; // defOrder[displayPos] = realPairIdx
 
   body.innerHTML = `
-    <p class="q-label">Term Match · ${n} cặp</p>
+    <p class="q-label">Term Match · Vòng ${qIdx+1}/${questions.length} · ${n} cặp</p>
     <p class="q-text">Ghép thuật ngữ với số thứ tự định nghĩa đúng</p>
     <p class="match-intro">👈 Chọn số (1–${n}) cho mỗi thuật ngữ · 0 = chưa chọn</p>
     <table class="match-table" id="mtable">${tableRows}</table>
@@ -433,7 +457,7 @@ function renderMatch(body) {
     </div>
     <div id="feedback"></div>
     <div class="next-wrap" id="next-wrap" style="display:none">
-      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Câu tiếp →':'Xem kết quả →'}</button>
+      <button class="btn btn-dark" onclick="next()">${qIdx+1<questions.length?'Vòng tiếp →':'Xem kết quả →'}</button>
     </div>`;
 }
 
@@ -536,9 +560,13 @@ function finishGame() {
 
   // Breakdown
   const n = questions.length;
+  const matchPairsPerRound = mode === 'match' && matchBatches.length > 0 ? matchBatches[0].length : 0;
+  const countLabel = mode === 'match'
+    ? `${n} vòng × ${matchPairsPerRound} cặp`
+    : `${n} câu`;
   const breakdown = `
     <div class="rb-row"><span class="rb-label">Mode</span><span class="rb-val">${mode.toUpperCase()}</span></div>
-    <div class="rb-row"><span class="rb-label">Số câu</span><span class="rb-val">${n}</span></div>
+    <div class="rb-row"><span class="rb-label">Số câu</span><span class="rb-val">${countLabel}</span></div>
     <div class="rb-row"><span class="rb-label">Điểm</span><span class="rb-val">${score} / ${maxScore}</span></div>
     <div class="rb-row"><span class="rb-label">Tỉ lệ</span><span class="rb-val">${pct}%</span></div>
     <div class="rb-row"><span class="rb-label">Thời gian</span><span class="rb-val">${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}</span></div>`;
@@ -546,7 +574,7 @@ function finishGame() {
 
   // Save & check best
   const key = `best_${mode}`;
-  const countKey = `${n}`;
+  const countKey = mode === 'match' ? `${matchPairsPerRound}x${n}` : `${n}`;
   const all = JSON.parse(localStorage.getItem(key) || '{}');
   const prev = all[countKey];
   let isNewBest = false;
