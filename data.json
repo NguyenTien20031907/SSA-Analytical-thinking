@@ -297,7 +297,7 @@
       "explain": "Systematic Questioning là kỹ năng phân tích quan trọng, sử dụng việc đặt câu hỏi một cách hệ thống, không giả định, nhằm đi sâu hơn vào vấn đề."
     },
     {
-      "q": "Thu thập, phân loại và cấu trúc dữ liệu sao cho có thể phân tích và rút ra insight hiệu quả – ___ Organization.",
+      "q": "Thu thập, phân loại và cấu trúc dữ liệu sao cho có thể phân tích và rút ra insight hiệu quả – Data ___.",
       "fullTerm": "Data Organization",
       "target": "ORGANIZATION",
       "explain": "ORGANIZATION: việc tổ chức, sắp xếp, thiết lập một cách có hệ thống. Dữ liệu cần được ORGANIZE trước khi phân tích – dữ liệu hỗn độn dẫn đến kết luận sai."
